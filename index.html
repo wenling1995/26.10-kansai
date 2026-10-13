@@ -10,9 +10,8 @@
     <meta name="apple-mobile-web-app-title" content="京阪神2026">
     <meta name="theme-color" content="#F5F2EB">
 
-    <!-- App cover image as web app icon -->
-    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=300&auto=format&fit=crop">
-    <link rel="icon" type="image/jpeg" href="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=100&auto=format&fit=crop">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%236B7A70'/><text x='50%' y='55%' dominant-baseline='central' text-anchor='middle' font-size='50'>⛩️</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%236B7A70'/><text x='50%' y='55%' dominant-baseline='central' text-anchor='middle' font-size='50'>⛩</text></svg>">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -104,20 +103,10 @@
         
         <section id="page-itinerary" class="page-view block p-4 space-y-4">
             
-            <div class="relative rounded-2xl overflow-hidden shadow-md border border-wabi-border bg-wabi-card">
-                <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=1000&auto=format&fit=crop" 
-                     alt="京阪神 8天7夜 App 封面" 
-                     class="w-full h-40 object-cover brightness-95"
-                     onerror="this.src='https://placehold.co/800x400/6B7A70/ffffff?text=Kansai+Master+Trip'">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-3.5 text-white">
-                    <span class="text-[10px] bg-wabi-accent/80 px-2 py-0.5 rounded-full w-max mb-1 font-semibold">MASTER 尊榮導覽</span>
-                    <h2 class="text-base font-bold wabi-title">京阪神 2026 秋季深度之旅</h2>
-                    <p class="text-[11px] text-white/80">將此網頁加入手機主畫面，即可作為專屬旅遊 App 使用！</p>
-                </div>
-            </div>
-
             <div class="sticky top-0 bg-wabi-bg/95 backdrop-blur-md py-2 -mx-4 px-4 border-b border-wabi-border/60 z-10">
-                <div class="flex gap-2 overflow-x-auto no-scrollbar py-1" id="date-tabs"></div>
+                <div class="flex gap-2 overflow-x-auto no-scrollbar py-1" id="date-tabs">
+                    <!-- Date tabs injected via JS -->
+                </div>
             </div>
 
             <div id="day-header" class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs flex items-center justify-between gap-2 overflow-hidden">
@@ -136,8 +125,11 @@
                 <button onclick="setCategoryFilter('shopping', this)" class="cat-filter-btn px-3 py-1 bg-wabi-card text-wabi-text rounded-xl border border-wabi-border text-xs whitespace-nowrap">🛍 購物</button>
             </div>
 
-            <div id="timeline-container" class="space-y-3 relative"></div>
+            <div id="timeline-container" class="space-y-3 relative">
+                <!-- Timeline items injected -->
+            </div>
 
+            <!-- Custom notes per day card -->
             <div class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs space-y-3">
                 <div class="flex items-center justify-between border-b border-wabi-border/60 pb-2">
                     <span class="font-bold text-xs text-wabi-text flex items-center gap-1.5 whitespace-nowrap">
@@ -165,6 +157,7 @@
                 </form>
             </div>
 
+            <!-- Leaflet Map Card -->
             <div class="bg-wabi-card rounded-2xl border border-wabi-border p-4 shadow-xs space-y-3">
                 <div class="flex items-center justify-between border-b border-wabi-border/60 pb-2">
                     <span class="font-bold text-xs text-wabi-text flex items-center gap-1.5 whitespace-nowrap">
@@ -307,92 +300,58 @@
                 </button>
             </div>
 
+            <!-- Guide Spot Highlights Card -->
             <div class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs space-y-4">
                 <h3 class="font-bold wabi-title text-sm text-wabi-accent border-b border-wabi-border/60 pb-2 flex items-center gap-1.5">
                     <i class="fa-solid fa-compass text-wabi-accent"></i> 資深導遊帶路：必訪核心景點深度解析
                 </h3>
 
-                <div class="space-y-2 bg-wabi-bg p-3.5 rounded-xl border border-wabi-border/60 shadow-2xs">
-                    <div class="flex items-center justify-between border-b border-wabi-border/40 pb-1.5">
-                        <span class="font-bold text-wabi-text text-xs flex items-center gap-1.5">
-                            <i class="fa-solid fa-earth-americas text-wabi-accent"></i> 🌟 USJ 必玩亮點與美食指南 🌎
+                <div class="space-y-1.5 bg-wabi-bg p-3 rounded-xl border border-wabi-border/50">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-wabi-text text-xs flex items-center gap-1">
+                            <i class="fa-solid fa-earth-americas text-wabi-accent"></i> 日本環球影城 (USJ) 🌎
                         </span>
-                        <span class="text-[10px] bg-[#B46A55]/15 text-[#B46A55] px-2 py-0.5 rounded font-bold">10/20 (二) 攻略</span>
+                        <span class="text-[10px] bg-[#E8EAE6] text-[#55635C] px-2 py-0.5 rounded font-bold">10/20 (二) 攻略</span>
                     </div>
-                    
-                    <div class="text-[11px] text-wabi-text leading-relaxed space-y-2">
-                        <div>
-                            <span class="font-bold text-[#B46A55]">🔥 必玩設施：</span>
-                            <ul class="list-disc pl-4 space-y-1 mt-1">
-                                <li><b>超級任天堂世界：</b><span class="text-[#B46A55] font-semibold">瑪利歐賽車～庫巴的挑戰書～</span>（AR 互動競速）、耀西大冒險。</li>
-                                <li><b>哈利波特的魔法世界：</b><span class="text-[#B46A55] font-semibold">哈利波特禁忌之旅</span>（極震撼 4D 體感）、鷹馬的飛行。</li>
-                                <li><b>小小兵樂園：</b><span class="text-[#B46A55] font-semibold">小小兵瘋狂乘車遊</span>。</li>
-                                <li><b>好萊塢區：</b><span class="text-[#B46A55] font-semibold">好萊塢美夢・逆轉世界</span>（刺激雲霄飛車）。</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <span class="font-bold text-[#C49A65]">🍔 必吃美食：</span>
-                            <ul class="list-disc pl-4 space-y-1 mt-1">
-                                <li><b>奇諾比奧咖啡店（瑪利歐區）：</b>必點<span class="text-[#C49A65] font-semibold">問號方塊提拉米蘇</span>、瑪利歐漢堡、超級蘑菇比薩碗。</li>
-                                <li><b>三隻掃帚（哈利波特區）：</b>必喝招牌<span class="text-[#C49A65] font-semibold">「冰奶油啤酒」</span>（香甜綿密無酒精）、烤雞排餐。</li>
-                                <li><b>園區小吃：</b><span class="text-[#C49A65] font-semibold">小小兵爆米花桶</span>、人氣火雞腿。</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-wabi-card p-2.5 rounded-lg border border-wabi-border/60">
-                            <span class="font-bold text-wabi-accent block mb-0.5">💡 實用攻略：</span>
-                            官方表定開園時間通常會<span class="text-[#B46A55] font-bold">提早 15～30 分鐘</span>，建議<span class="text-[#B46A55] font-bold">提早排隊入園</span>，第一時間<span class="text-[#B46A55] font-bold">直衝瑪利歐園區</span>省去抽整理券的麻煩。
-                        </div>
-                    </div>
+                    <p class="text-[11px] text-wabi-text leading-relaxed">
+                        <b>特點：</b>世界級的主题樂園，擁有超級任天堂世界（瑪利歐區）與哈利波特的魔法世界。<br>
+                        <b>導遊叮嚀：</b>務必提早排隊（建議 07:00 出發），優先搶入園整理券或善用快速通關（Express Pass）。
+                    </p>
                 </div>
 
-                <div class="space-y-3 bg-wabi-bg p-3.5 rounded-xl border border-wabi-border/60 shadow-2xs">
-                    <div class="flex items-center justify-between border-b border-wabi-border/40 pb-1.5">
-                        <span class="font-bold text-wabi-text text-xs flex items-center gap-1.5">
-                            <i class="fa-solid fa-paw text-[#6B7A70]"></i> 🐾 神戶動物王國：表演與互動活動全攻略
+                <div class="space-y-1.5 bg-wabi-bg p-3 rounded-xl border border-wabi-border/50">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-wabi-text text-xs flex items-center gap-1">
+                            <i class="fa-solid fa-paw text-wabi-accent"></i> 神戶動物王國 🐾
                         </span>
-                        <span class="text-[10px] bg-[#6B7A70]/15 text-[#6B7A70] px-2 py-0.5 rounded font-bold">10/23 (五) 攻略</span>
+                        <span class="text-[10px] bg-[#E8EAE6] text-[#55635C] px-2 py-0.5 rounded font-bold">10/23 (五) 亮點與表演</span>
                     </div>
+                    <p class="text-[11px] text-wabi-text leading-relaxed">
+                        <b>特點：</b>強調「近距離接觸」的半開放式生態動物園。水豚君泡湯、超萌兔耳袋狸、以及精彩絕倫的 <b>Wings 飛鳥秀</b> 絕對不能錯過。<br>
+                        <b>表演時刻參考：</b>
+                        <br>• <b>Wings (飛鳥飛行秀)：</b>戶外「風之運動場」，常見時間 11:30、14:30。
+                        <br>• <b>Buddy (工作犬表演)：</b>常見時間 13:30。
+                        <br>• <b>企鵝餵食點心：</b>常見時間 11:00、14:00 (⚠️ 需搶整理券)。
+                    </p>
+                </div>
 
-                    <div class="text-[11px] text-wabi-text leading-relaxed space-y-2.5">
-                        <p class="text-wabi-muted">
-                            神戶動物王國擁有固定且豐富的表演與解說活動。⚠️ <span class="text-[#B46A55] font-bold">官方每日最新時刻表會根據季節、天氣及動物狀態微調</span>，入園時請務必<span class="text-[#6B7A70] font-bold">掃描入口處 QR Code</span> 或領取紙本告示，以當天公佈為準。
-                        </p>
-
-                        <div class="overflow-hidden border border-wabi-border rounded-xl bg-wabi-card">
-                            <div class="bg-[#EAE5D9] px-3 py-1.5 border-b border-wabi-border font-bold text-xs text-wabi-text flex justify-between items-center">
-                                <span>熱門表演與活動時間表</span>
-                                <span class="text-[10px] font-normal text-wabi-muted">通常一天 1~2 場</span>
-                            </div>
-                            <div class="divide-y divide-wabi-border/60 text-[11px]">
-                                <div class="p-2.5 flex flex-col gap-1">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-[#6B7A70] text-xs">🦅 Wings (飛鳥飛行秀)</span>
-                                        <span class="bg-[#6B7A70]/10 text-[#6B7A70] font-mono px-2 py-0.5 rounded font-bold">11:30、14:30</span>
-                                    </div>
-                                    <p class="text-wabi-muted text-[10.5px]">猛禽（老鷹、鴞）與彩色鸚鵡在池塘上方低空飛過，場面極具震撼力（主要於戶外「風之運動場」舉辦）。</p>
-                                </div>
-                                <div class="p-2.5 flex flex-col gap-1">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-[#C49A65] text-xs">🐕 Buddy (工作犬 / 牧羊表演)</span>
-                                        <span class="bg-[#C49A65]/10 text-[#C49A65] font-mono px-2 py-0.5 rounded font-bold">13:30</span>
-                                    </div>
-                                    <p class="text-wabi-muted text-[10.5px]">邊境牧羊犬展示精湛的牧羊與飛盤特技（夏季高溫時段可能暫停或改至室內）。</p>
-                                </div>
-                                <div class="p-2.5 flex flex-col gap-1">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-[#B46A55] text-xs">🐧 企鵝餵食點心 <span class="text-[9px] bg-[#B46A55] text-white px-1.5 py-0.2 rounded font-normal ml-1">需整理券</span></span>
-                                        <span class="bg-[#B46A55]/10 text-[#B46A55] font-mono px-2 py-0.5 rounded font-bold">11:00、14:00</span>
-                                    </div>
-                                    <p class="text-wabi-muted text-[10.5px]">體驗親手餵食企鵝，每場有限額，需提前領取整理券。</p>
-                                </div>
-                            </div>
-                        </div>
+                <div class="space-y-1.5 bg-wabi-bg p-3 rounded-xl border border-wabi-border/50">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-wabi-text text-xs flex items-center gap-1">
+                            <i class="fa-solid fa-torii-gate text-wabi-accent"></i> 清水寺、伏見稻荷大社與宇治景點 ⛩️
+                        </span>
+                        <span class="text-[10px] bg-[#E8EAE6] text-[#55635C] px-2 py-0.5 rounded font-bold">京都/宇治必訪</span>
                     </div>
+                    <p class="text-[11px] text-wabi-text leading-relaxed">
+                        <b>特點：</b>
+                        <br>• <b>清水寺：</b>世界文化遺產，懸空的「清水舞台」。
+                        <br>• <b>宇治平等院與三星園：</b>十元硬幣上的鳳凰堂。
+                        <br>• <b>伏見稻荷大社：</b>千本鳥居。
+                    </p>
                 </div>
             </div>
 
+            <!-- Flights Card -->
             <div class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs space-y-3">
                 <div class="flex items-center justify-between border-b border-wabi-border/60 pb-2 gap-2">
                     <span class="font-bold wabi-title text-sm text-wabi-text whitespace-nowrap"><i class="fa-solid fa-plane text-wabi-accent mr-1"></i> 台灣虎航 Tigerair</span>
@@ -414,6 +373,26 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Hotels Card -->
+            <div class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs space-y-3">
+                <h3 class="font-bold wabi-title text-sm text-wabi-text border-b border-wabi-border/60 pb-2">
+                    <i class="fa-solid fa-hotel text-wabi-accent mr-1"></i> 飯店資訊
+                </h3>
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-wabi-text">京都 (10/17 - 10/19 兩晚)</span>
+                    </div>
+                    <p class="text-xs font-medium text-wabi-text">Sanco Inn Kyoto Hachijoguchi Shikinoyu (三交イン京都八条口「四季の湯」)</p>
+                </div>
+                <hr class="border-wabi-border/60">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-wabi-text">大阪 (10/19 - 10/24 五晚)</span>
+                    </div>
+                    <p class="text-xs font-medium text-wabi-text">OMO7 Osaka by Hoshino Resorts (OMO7 大阪)</p>
+                </div>
+            </div>
         </section>
 
         <section id="page-expense" class="page-view hidden p-4 space-y-4">
@@ -422,10 +401,7 @@
                     <h2 class="text-base font-bold wabi-title text-wabi-text truncate">💴 隨手記帳</h2>
                     <p class="text-xs text-wabi-muted truncate">記錄日本旅遊消費支出</p>
                 </div>
-                <div class="flex items-center gap-2 shrink-0">
-                    <button onclick="exportExpensesToExcel()" class="bg-wabi-accent text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs hover:opacity-90 active:scale-95 transition-all flex items-center gap-1.5 whitespace-nowrap">
-                        <i class="fa-solid fa-file-excel"></i> 匯出 Excel
-                    </button>
+                <div class="text-right shrink-0">
                     <span id="rate-display" class="text-xs font-mono font-bold text-wabi-accent whitespace-nowrap">匯率: 0.215</span>
                 </div>
             </div>
@@ -528,6 +504,7 @@
         </button>
     </nav>
 
+    <!-- Fullscreen Map Modal -->
     <div id="map-modal" class="fixed inset-0 bg-black/70 z-50 flex flex-col hidden backdrop-blur-xs">
         <div class="bg-wabi-card px-4 py-3 flex items-center justify-between border-b border-wabi-border shrink-0">
             <div>
@@ -746,8 +723,8 @@
                 events: [
                     { time: '07:30~08:00', type: 'hotel', icon: '🏨', title: 'OMO7 大阪出發', note: '早起出發', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
                     { time: '約09:00', type: 'hotel', icon: '🚆', title: '抵達三宮', note: '轉 Port Liner', nav: 'Sannomiya Station', lat: 34.6940, lng: 135.1950 },
-                    { time: '10:00', type: 'spot', icon: '🐾', title: '神戶動物王國入園', note: '核心行程 (一進門先掃 QR Code 看當日時刻表)', nav: 'Kobe Animal Kingdom', lat: 34.6621, lng: 135.2215 },
-                    { time: '10:00~14:45', type: 'spot', icon: '🐾', title: '動物王國＋表演／互動', note: '🦅 Wings飛鳥秀(11:30/14:30)\n🐕 Buddy工作犬(13:30)\n🐧 企鵝餵食(11:00/14:00 需整理券)\n🐪 騎馬/駱駝(11:00/14:00)', nav: 'Kobe Animal Kingdom', lat: 34.6621, lng: 135.2215 },
+                    { time: '10:00', type: 'spot', icon: '🐾', title: '神戶動物王國入園', note: '核心行程', nav: 'Kobe Animal Kingdom', lat: 34.6621, lng: 135.2215 },
+                    { time: '10:00~14:45', type: 'spot', icon: '🐾', title: '動物王國＋表演／互動', note: '🦅 Wings飛鳥秀 ｜ 🐕 Buddy ｜ 🐧 企鵝餵食', nav: 'Kobe Animal Kingdom', lat: 34.6621, lng: 135.2215 },
                     { time: '14:45~15:30', type: 'hotel', icon: '🚆', title: '前往三宮／元町', note: '—', nav: 'Motomachi Station', lat: 34.6888, lng: 135.1865 },
                     { time: '15:30~16:30', type: 'shopping', icon: '🛍️', title: '元町商店街', note: '約 1 小時', nav: 'Motomachi Shopping Street', lat: 34.6888, lng: 135.1865 },
                     { time: '16:30~17:00', type: 'hotel', icon: '🚶', title: '返回三宮', note: '—', nav: 'Sannomiya Station', lat: 34.6940, lng: 135.1950 },
@@ -1182,84 +1159,6 @@
             }
         }
 
-        function setExpenseFilter(cat, btnElement) {
-            currentExpenseCategoryFilter = cat;
-            document.querySelectorAll('.exp-filter-btn').forEach(b => {
-                b.classList.remove('tab-active');
-                b.classList.add('bg-wabi-card', 'text-wabi-text');
-            });
-            if (btnElement) {
-                btnElement.classList.add('tab-active');
-                btnElement.classList.remove('bg-wabi-card', 'text-wabi-text');
-            }
-            renderExpenseList();
-        }
-
-        function renderExpenseList() {
-            const container = document.getElementById('expense-list');
-            const filtered = expensesList.filter(e => currentExpenseCategoryFilter === 'all' || e.category === currentExpenseCategoryFilter);
-
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="bg-wabi-card p-6 rounded-2xl border border-wabi-border text-center text-wabi-muted text-xs">目前尚無消費紀錄</div>`;
-                return;
-            }
-
-            container.innerHTML = filtered.map((item, idx) => `
-                <div class="bg-wabi-card p-3.5 rounded-2xl border border-wabi-border shadow-xs flex items-center justify-between gap-2">
-                    <div class="min-w-0 flex-1">
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] bg-wabi-bg text-wabi-accent px-2 py-0.5 rounded font-bold border border-wabi-border">${item.category}</span>
-                            <span class="font-bold text-wabi-text text-xs truncate">${item.name}</span>
-                        </div>
-                        <div class="text-[10px] text-wabi-muted mt-1 flex items-center gap-2">
-                            <span>支付: ${item.payment}</span>
-                            ${item.note ? `<span>• 備註: ${item.note}</span>` : ''}
-                        </div>
-                    </div>
-                    <div class="text-right shrink-0">
-                        <div class="font-mono font-bold text-xs text-wabi-text">${item.payment === '台幣' ? 'NT$ ' + item.amount : '¥ ' + item.amount.toLocaleString()}</div>
-                        <div class="text-[10px] font-mono text-wabi-muted">${item.payment === '台幣' ? '折合 ¥' + Math.round(item.amount / jpyExchangeRate) : '約 NT$ ' + Math.round(item.amount * jpyExchangeRate)}</div>
-                    </div>
-                    <button onclick="deleteExpense(${item.id})" class="text-wabi-muted hover:text-red-500 p-1">
-                        <i class="fa-solid fa-trash text-xs"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function updateExpenseSummary() {
-            let totalJpy = 0;
-            let totalTwd = 0;
-            const catTotals = { '食': 0, '購物': 0, '伴手禮': 0, '代購': 0, '住': 0, '行': 0, '其他': 0 };
-
-            expensesList.forEach(e => {
-                const amt = Number(e.amount) || 0;
-                if (e.payment === '台幣') {
-                    totalTwd += amt;
-                    totalJpy += amt / jpyExchangeRate;
-                } else {
-                    totalJpy += amt;
-                    totalTwd += amt * jpyExchangeRate;
-                }
-                if (catTotals[e.category] !== undefined) {
-                    catTotals[e.category] += amt;
-                } else {
-                    catTotals['其他'] += amt;
-                }
-            });
-
-            document.getElementById('total-jpy').textContent = '¥ ' + Math.round(totalJpy).toLocaleString();
-            document.getElementById('total-twd').textContent = 'NT$ ' + Math.round(totalTwd).toLocaleString();
-
-            const catContainer = document.getElementById('expense-category-totals');
-            catContainer.innerHTML = Object.entries(catTotals).map(([cat, val]) => `
-                <div class="bg-wabi-bg p-2 rounded-xl border border-wabi-border/60 text-center">
-                    <span class="text-wabi-muted font-medium block">${cat}</span>
-                    <span class="font-mono font-bold text-wabi-text mt-0.5 block truncate">${val > 0 ? (cat === '食' || cat === '購物' || cat === '伴手禮' || cat === '代購' || cat === '住' || cat === '行' ? '¥' : '¥') + Math.round(val).toLocaleString() : '0'}</span>
-                </div>
-            `).join('');
-        }
-
         function setupFormListeners() {
             document.getElementById('expense-form').addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -1278,10 +1177,10 @@
                     payment,
                     category,
                     note,
-                    date: new Date().toLocaleDateString()
+                    dateStr: new Date().toLocaleDateString()
                 };
 
-                expensesList.push(newExp);
+                expensesList.unshift(newExp);
                 localStorage.setItem('kansai_master_expenses', JSON.stringify(expensesList));
 
                 document.getElementById('exp-name').value = '';
@@ -1293,6 +1192,60 @@
             });
         }
 
+        function setExpenseFilter(cat, btn) {
+            currentExpenseCategoryFilter = cat;
+            document.querySelectorAll('.exp-filter-btn').forEach(b => {
+                b.classList.remove('tab-active');
+                b.classList.add('bg-wabi-card', 'text-wabi-text');
+            });
+            if (btn) {
+                btn.classList.add('tab-active');
+                btn.classList.remove('bg-wabi-card', 'text-wabi-text');
+            }
+            renderExpenseList();
+        }
+
+        function renderExpenseList() {
+            const container = document.getElementById('expense-list');
+            const filtered = expensesList.filter(e => {
+                if (currentExpenseCategoryFilter === 'all') return true;
+                return e.category === currentExpenseCategoryFilter;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="bg-wabi-card p-6 rounded-2xl border border-wabi-border text-center text-wabi-muted text-xs">尚無消費記錄</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const isTwd = item.payment === '台幣';
+                const twdVal = isTwd ? item.amount : Math.round(item.amount * jpyExchangeRate);
+                const jpyVal = isTwd ? Math.round(item.amount / jpyExchangeRate) : item.amount;
+
+                return `
+                    <div class="bg-wabi-card p-3 rounded-xl border border-wabi-border flex items-center justify-between gap-2 text-xs">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 bg-wabi-bg rounded text-[10px] font-bold text-wabi-accent border border-wabi-border">${item.category}</span>
+                                <span class="font-bold text-wabi-text truncate">${item.name}</span>
+                            </div>
+                            <div class="text-[10px] text-wabi-muted mt-1 flex items-center gap-2">
+                                <span>${item.payment}</span>
+                                ${item.note ? `<span>• ${item.note}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <div class="font-mono font-bold text-wabi-text">${isTwd ? 'NT$ ' + item.amount.toLocaleString() : '¥ ' + item.amount.toLocaleString()}</div>
+                            <div class="text-[10px] font-mono text-wabi-muted">${isTwd ? '約 ¥ ' + jpyVal.toLocaleString() : '約 NT$ ' + twdVal.toLocaleString()}</div>
+                        </div>
+                        <button onclick="deleteExpense(${item.id})" class="text-wabi-muted hover:text-red-500 p-1 shrink-0">
+                            <i class="fa-solid fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
         function deleteExpense(id) {
             expensesList = expensesList.filter(e => e.id !== id);
             localStorage.setItem('kansai_master_expenses', JSON.stringify(expensesList));
@@ -1300,51 +1253,50 @@
             updateExpenseSummary();
         }
 
-        // Export expenses to Excel (CSV with UTF-8 BOM)
-        function exportExpensesToExcel() {
-            if (expensesList.length === 0) {
-                alert('目前尚無任何記帳資料可供匯出！');
-                return;
-            }
+        function updateExpenseSummary() {
+            let totalJpy = 0;
+            let totalTwd = 0;
+            let catTotals = { '食': 0, '購物': 0, '伴手禮': 0, '代購': 0, '住': 0, '行': 0, '其他': 0 };
 
-            let csvContent = "\uFEFF"; // UTF-8 BOM for Excel compatibility with Chinese characters
-            csvContent += "項次,消費品項,金額,支付方式,類別,備註,記錄日期\n";
-
-            expensesList.forEach((item, index) => {
-                const row = [
-                    index + 1,
-                    `"${(item.name || '').replace(/"/g, '""')}"`,
-                    item.amount,
-                    `"${item.payment}"`,
-                    `"${item.category}"`,
-                    `"${(item.note || '').replace(/"/g, '""')}"`,
-                    `"${item.date || ''}"`
-                ];
-                csvContent += row.join(",") + "\n";
+            expensesList.forEach(e => {
+                const isTwd = e.payment === '台幣';
+                if (isTwd) {
+                    totalTwd += e.amount;
+                    totalJpy += (e.amount / jpyExchangeRate);
+                } else {
+                    totalJpy += e.amount;
+                    totalTwd += (e.amount * jpyExchangeRate);
+                }
+                if (catTotals[e.category] !== undefined) {
+                    catTotals[e.category] += isTwd ? (e.amount / jpyExchangeRate) : e.amount;
+                } else {
+                    catTotals['其他'] += isTwd ? (e.amount / jpyExchangeRate) : e.amount;
+                }
             });
 
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `京阪神旅遊記帳_${new Date().toISOString().slice(0, 10)}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            document.getElementById('total-jpy').textContent = '¥ ' + Math.round(totalJpy).toLocaleString();
+            document.getElementById('total-twd').textContent = 'NT$ ' + Math.round(totalTwd).toLocaleString();
+
+            const catContainer = document.getElementById('expense-category-totals');
+            catContainer.innerHTML = Object.keys(catTotals).map(cat => `
+                <div class="bg-wabi-bg p-2 rounded-xl border border-wabi-border/60 text-center">
+                    <span class="text-wabi-muted block">${cat}</span>
+                    <span class="font-mono font-bold text-wabi-text mt-0.5 block truncate">¥${Math.round(catTotals[cat]).toLocaleString()}</span>
+                </div>
+            `).join('');
         }
 
         function triggerPhotoUpload() {
             document.getElementById('ai-photo-input').click();
         }
 
-        function onPhotoSelected(event) {
-            const file = event.target.files[0];
+        function onPhotoSelected(e) {
+            const file = e.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = function(e) {
-                selectedBase64Image = e.target.result;
+            reader.onload = function(uploadEvent) {
+                selectedBase64Image = uploadEvent.target.result;
                 document.getElementById('ai-image-preview').src = selectedBase64Image;
                 document.getElementById('ai-image-preview-title').textContent = file.name;
                 document.getElementById('ai-image-preview-container').classList.remove('hidden');
@@ -1354,8 +1306,30 @@
 
         function clearSelectedImage() {
             selectedBase64Image = null;
-            document.getElementById('ai-image-preview-container').classList.add('hidden');
             document.getElementById('ai-photo-input').value = '';
+            document.getElementById('ai-image-preview-container').classList.add('hidden');
+        }
+
+        function setupAIChat() {
+            document.getElementById('ai-chat-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const inputEl = document.getElementById('ai-user-input');
+                const promptText = inputEl.value.trim();
+                if (!promptText && !selectedBase64Image) return;
+
+                appendUserChatMessage(promptText, selectedBase64Image);
+                inputEl.value = '';
+                const currentImg = selectedBase64Image;
+                clearSelectedImage();
+
+                const aiMsgId = appendAIChatLoadingMessage();
+                try {
+                    const responseHTML = await fetchGeminiAIResponse(promptText, currentImg);
+                    updateAIChatMessage(aiMsgId, responseHTML);
+                } catch (err) {
+                    updateAIChatMessage(aiMsgId, 'AI 導遊連線發生錯誤，請稍後再試。');
+                }
+            });
         }
 
         function sendQuickPrompt(promptText) {
@@ -1364,77 +1338,67 @@
             document.getElementById('ai-chat-form').dispatchEvent(new Event('submit'));
         }
 
-        function setupAIChat() {
-            document.getElementById('ai-chat-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const inputEl = document.getElementById('ai-user-input');
-                const userText = inputEl.value.trim();
-                if (!userText && !selectedBase64Image) return;
+        function appendUserChatMessage(text, img) {
+            const chatWindow = document.getElementById('ai-chat-window');
+            const div = document.createElement('div');
+            div.className = 'flex items-start justify-end gap-2.5';
+            div.innerHTML = `
+                <div class="bg-wabi-accent text-white p-3 rounded-2xl rounded-tr-xs max-w-[85%] text-xs leading-relaxed space-y-2">
+                    ${img ? `<img src="${img}" class="w-full max-h-40 object-cover rounded-lg border border-white/20">` : ''}
+                    ${text ? `<p>${text}</p>` : ''}
+                </div>
+                <div class="w-7 h-7 rounded-full bg-wabi-muted text-white flex items-center justify-center shrink-0 text-xs shadow-xs">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            `;
+            chatWindow.appendChild(div);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
 
-                const chatWindow = document.getElementById('ai-chat-window');
+        function appendAIChatLoadingMessage() {
+            const chatWindow = document.getElementById('ai-chat-window');
+            const id = 'ai-msg-' + Date.now();
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'flex items-start gap-2.5';
+            div.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-wabi-accent text-white flex items-center justify-center shrink-0 text-xs shadow-xs">
+                    <i class="fa-solid fa-sparkles"></i>
+                </div>
+                <div class="bg-wabi-bg p-3 rounded-2xl rounded-tl-xs border border-wabi-border/60 max-w-[85%] text-wabi-text leading-relaxed">
+                    <p class="animate-pulse text-wabi-accent font-medium">AI 導遊正在翻閱 2026 京阪神 MASTER 旅遊資料庫與即時資訊...</p>
+                </div>
+            `;
+            chatWindow.appendChild(div);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            return id;
+        }
 
-                // Append user message
-                let userHtml = `
-                    <div class="flex items-start justify-end gap-2.5">
-                        <div class="bg-wabi-accent text-white p-3 rounded-2xl rounded-tr-xs max-w-[85%] text-wabi-text leading-relaxed">
-                `;
-                if (selectedBase64Image) {
-                    userHtml += `<img src="${selectedBase64Image}" class="w-32 h-32 object-cover rounded-lg mb-2 border border-white/30" alt="上傳圖片">`;
-                }
-                userHtml += `<span>${userText}</span></div>
-                        <div class="w-7 h-7 rounded-full bg-[#7D8B96] text-white flex items-center justify-center shrink-0 text-xs shadow-xs">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                    </div>
-                `;
-                chatWindow.insertAdjacentHTML('beforeend', userHtml);
-                inputEl.value = '';
-                const currentImg = selectedBase64Image;
-                clearSelectedImage();
-                chatWindow.scrollTop = chatWindow.scrollHeight;
+        function updateAIChatMessage(id, htmlContent) {
+            const msgEl = document.getElementById(id);
+            if (!msgEl) return;
+            msgEl.querySelector('div:nth-child(2)').innerHTML = htmlContent;
+            const chatWindow = document.getElementById('ai-chat-window');
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
 
-                // Simulate AI response
-                const loadingId = 'ai-loading-' + Date.now();
-                chatWindow.insertAdjacentHTML('beforeend', `
-                    <div id="${loadingId}" class="flex items-start gap-2.5">
-                        <div class="w-7 h-7 rounded-full bg-wabi-accent text-white flex items-center justify-center shrink-0 text-xs shadow-xs">
-                            <i class="fa-solid fa-sparkles"></i>
-                        </div>
-                        <div class="bg-wabi-bg p-3 rounded-2xl rounded-tl-xs border border-wabi-border/60 text-wabi-muted flex items-center gap-2">
-                            <i class="fa-solid fa-circle-notch fa-spin text-wabi-accent"></i> 正在聯網搜尋與深度解析中...
-                        </div>
-                    </div>
-                `);
-                chatWindow.scrollTop = chatWindow.scrollHeight;
+        async function fetchGeminiAIResponse(prompt, img) {
+            // Simulated intelligent assistant response based on prompt keywords and synced master schedule
+            await new Promise(r => setTimeout(r, 1200));
 
-                setTimeout(() => {
-                    const loadingEl = document.getElementById(loadingId);
-                    if (loadingEl) loadingEl.remove();
+            if (img) {
+                return `<b>📸 圖片解析與日語翻譯：</b><br>您上傳的照片已成功識別。這是一份日本當地的菜單或看板資訊。建議您可以向店員出示畫面並點選人氣招牌餐點！`;
+            }
 
-                    let replyText = `收到您的詢問！針對「${userText}」，根據您的 2026 京阪神 MASTER 行程資料：`;
-                    if (userText.includes('神戶動物王國') || userText.includes('表演')) {
-                        replyText = `🐾 <b>神戶動物王國導遊貼心提醒：</b><br>1. <b>Wings 飛鳥飛行秀</b> 通常於 11:30 與 14:30 在戶外舉辦。<br>2. <b>企鵝餵食體驗</b> (11:00 / 14:00) 需現場排隊領取整理券。<br>⚠️ 入園時請務必立即掃描入口處 QR Code 確認當天最新時刻表喔！`;
-                    } else if (userText.includes('梅田') || userText.includes('午餐')) {
-                        replyText = `🍜 <b>10/21 梅田午餐推薦比較：</b><br>• <b>主要餐廳：にし家 Grand Front大阪店</b> (Tabelog 3.52，烏龍麵與壽喜燒極受好評，交通便利位於 Grand Front 南館 7F)。<br>• <b>備選：うどん兎麦</b> 或 <b>お好み焼ききじ</b>，排隊人潮較多建議提早前往！`;
-                    } else if (currentImg) {
-                        replyText = `📸 <b>圖片視覺解析完成：</b><br>我已為您辨識此張照片的內容！若這是日本菜單或收據，您可以直接將金額複製並手動登錄至「隨手記帳」頁面中進行總計！`;
-                    } else {
-                        replyText = `👍 沒問題！這筆關於「${userText}」的需求已記錄在案。在您的 8 天旅程中，OMO7 大阪住宿與各項門票預約都已妥善安排，祝您旅途愉快！`;
-                    }
+            if (prompt.includes('神戶動物王國')) {
+                return `<b>🐾 神戶動物王國導遊解析：</b><br>• <b>Wings 飛鳥飛行秀：</b>戶外「風之運動場」，常見時間為 11:30 與 14:30，建議提早 20 分鐘佔位。<br>• <b>企鵝餵食點心：</b>11:00、14:00 (⚠️ 需索取整理券)。<br>• <b>水豚君與袋狸：</b>半開放式互動區極為療癒，記得入園先拿導覽地圖！`;
+            }
 
-                    chatWindow.insertAdjacentHTML('beforeend', `
-                        <div class="flex items-start gap-2.5">
-                            <div class="w-7 h-7 rounded-full bg-wabi-accent text-white flex items-center justify-center shrink-0 text-xs shadow-xs">
-                                <i class="fa-solid fa-sparkles"></i>
-                            </div>
-                            <div class="bg-wabi-bg p-3 rounded-2xl rounded-tl-xs border border-wabi-border/60 max-w-[85%] text-wabi-text leading-relaxed">
-                                ${replyText}
-                            </div>
-                        </div>
-                    `);
-                    chatWindow.scrollTop = chatWindow.scrollHeight;
-                }, 1200);
-            });
+            if (prompt.includes('梅田午餐')) {
+                return `<b>🍜 梅田午餐比較推薦：</b><br>• <b>にし家 Grand Front大阪店：</b>主打烏龍麵與烏龍壽喜鍋（Tabelog 3.52），位置便利且環境舒適，適合作為 10/21 的主要午餐。<br>• <b>備選餐廳：</b>如想品嚐拉麵或大阪燒，也可考慮梅田地下街其他名店。`;
+            }
+
+            return `收到您的提問！針對 2026 京阪神 8 天 7 夜行程：<br>• <b>行程摘要：</b>已為您同步每日景點、地鐵導航、餐廳 Tabelog 評分與隨手記帳功能。<br>• <b>即時建議：</b>隨時可點擊上方快捷按鈕或使用拍照翻譯功能！`;
         }
     </script>
 </body>
