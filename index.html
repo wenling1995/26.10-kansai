@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京阪神 8天7夜 MASTER 行程</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="京阪神2026">
+    <meta name="theme-color" content="#F5F2EB">
+
+    <!-- App cover image as web app icon -->
+    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=300&auto=format&fit=crop">
+    <link rel="icon" type="image/jpeg" href="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=100&auto=format&fit=crop">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wabi: {
+                            bg: '#F5F2EB',       /* 溫潤灰白米色 (Wabi-sabi background) */
+                            card: '#FCFAF7',     /* 柔和米白卡片底色 */
+                            text: '#3E3D3A',     /* 深墨灰字體 (柔和不刺眼) */
+                            muted: '#8C867D',    /* 莫蘭迪灰褐色副標 */
+                            accent: '#6B7A70',   /* 莫蘭迪青綠色 (核心主題色) */
+                            red: '#B46A55',      /* 莫蘭迪磚紅色 */
+                            gold: '#C49A65',     /* 莫蘭迪琥珀金 */
+                            border: '#E6E1D6',   /* 柔和分隔線 */
+                            spotColor: '#6B7A70',    /* 景點地標色 */
+                            foodColor: '#B46A55',    /* 美食餐廳色 */
+                            hotelColor: '#7D8B96',   /* 住宿交通色 */
+                            shopColor: '#8E735B',    /* 🛍️ 購物/伴手禮色彩 (莫蘭迪可可棕) */
+                            miscColor: '#5E7387'     /* ✨ 其他活動色彩 (莫蘭迪靛藍灰) */
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif JP"', 'serif'],
+                        sans: ['"Noto Sans TC"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F5F2EB;
+            color: #3E3D3A;
+            font-family: 'Noto Sans TC', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .wabi-title {
+            font-family: 'Noto Serif JP', serif;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .nav-active {
+            color: #6B7A70;
+            font-weight: 700;
+        }
+        .tab-active {
+            background-color: #6B7A70 !important;
+            color: #FFFFFF !important;
+            border-color: #6B7A70 !important;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .pt-safe {
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <header class="bg-wabi-bg border-b border-wabi-border px-5 py-3 pt-safe flex items-center justify-between shrink-0 z-20 shadow-xs">
+        <div>
+            <span class="text-[10px] text-wabi-accent font-semibold tracking-widest block uppercase whitespace-nowrap">2026.10 🇯🇵 關西 MASTER 行程</span>
+            <h1 class="text-lg font-bold wabi-title text-wabi-text tracking-wide whitespace-nowrap">京阪神 8天7夜</h1>
+        </div>
+        <div class="text-right shrink-0">
+            <span class="text-xs text-wabi-muted whitespace-nowrap">10/17 ～ 10/24</span>
+            <div class="flex items-center justify-end gap-1 text-[11px] text-wabi-accent font-medium mt-0.5 whitespace-nowrap">
+                <i class="fa-solid fa-sparkles text-[10px]"></i> AI 導遊已連線
+            </div>
+        </div>
+    </header>
+
+    <main id="app-content" class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar pb-28">
+        
+        <section id="page-itinerary" class="page-view block p-4 space-y-4">
+            
+            <div class="relative rounded-2xl overflow-hidden shadow-md border border-wabi-border bg-wabi-card">
+                <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=1000&auto=format&fit=crop" 
+                     alt="京阪神 8天7夜 App 封面" 
+                     class="w-full h-40 object-cover brightness-95"
+                     onerror="this.src='https://placehold.co/800x400/6B7A70/ffffff?text=Kansai+Master+Trip'">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-3.5 text-white">
+                    <span class="text-[10px] bg-wabi-accent/80 px-2 py-0.5 rounded-full w-max mb-1 font-semibold">MASTER 尊榮導覽</span>
+                    <h2 class="text-base font-bold wabi-title">京阪神 2026 秋季深度之旅</h2>
+                    <p class="text-[11px] text-white/80">將此網頁加入手機主畫面，即可作為專屬旅遊 App 使用！</p>
+                </div>
+            </div>
+
+            <div class="sticky top-0 bg-wabi-bg/95 backdrop-blur-md py-2 -mx-4 px-4 border-b border-wabi-border/60 z-10">
+                <div class="flex gap-2 overflow-x-auto no-scrollbar py-1" id="date-tabs"></div>
+            </div>
+
+            <div id="day-header" class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs flex items-center justify-between gap-2 overflow-hidden">
+                <div class="min-w-0 flex-1">
+                    <h2 id="day-title" class="text-base font-bold wabi-title text-wabi-text truncate">10/17 (六)</h2>
+                    <p id="day-subtitle" class="text-xs text-wabi-muted mt-0.5 truncate">桃園 → 京都＋TeamLab</p>
+                </div>
+                <span id="day-badge" class="px-3 py-1 bg-wabi-bg text-wabi-accent font-medium text-xs rounded-full border border-wabi-border whitespace-nowrap shrink-0">京都 Day 1</span>
+            </div>
+
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-1">
+                <button onclick="setCategoryFilter('all', this)" class="cat-filter-btn tab-active px-3 py-1 rounded-xl border border-wabi-border text-xs font-medium whitespace-nowrap">全部</button>
+                <button onclick="setCategoryFilter('spot', this)" class="cat-filter-btn px-3 py-1 bg-wabi-card text-wabi-text rounded-xl border border-wabi-border text-xs whitespace-nowrap">⛩️ 景點</button>
+                <button onclick="setCategoryFilter('food', this)" class="cat-filter-btn px-3 py-1 bg-wabi-card text-wabi-text rounded-xl border border-wabi-border text-xs whitespace-nowrap">🍽️ 美食</button>
+                <button onclick="setCategoryFilter('hotel', this)" class="cat-filter-btn px-3 py-1 bg-wabi-card text-wabi-text rounded-xl border border-wabi-border text-xs whitespace-nowrap">🏨 住宿/交通</button>
+                <button onclick="setCategoryFilter('shopping', this)" class="cat-filter-btn px-3 py-1 bg-wabi-card text-wabi-text rounded-xl border border-wabi-border text-xs whitespace-nowrap">🛍 購物</button>
+            </div>
+
+            <div id="timeline-container" class="space-y-3 relative"></div>
+
+            <div class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs space-y-3">
+                <div class="flex items-center justify-between border-b border-wabi-border/60 pb-2">
+                    <span class="font-bold text-xs text-wabi-text flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-note-sticky text-wabi-accent"></i> 當日自訂行程與備註欄
+                    </span>
+                    <span class="text-[10px] text-wabi-muted font-normal">自動儲存於此日期</span>
+                </div>
+                
+                <div id="day-custom-notes-list" class="space-y-2"></div>
+
+                <form onsubmit="addCustomDayNote(event)" class="space-y-2 pt-2 border-t border-wabi-border/40">
+                    <div class="grid grid-cols-12 gap-2">
+                        <input type="text" id="custom-note-time" placeholder="時間 (例: 15:00)" required
+                               class="col-span-4 bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2 outline-none focus:border-wabi-accent font-mono">
+                        <input type="text" id="custom-note-title" placeholder="自訂行程/備註標題" required
+                               class="col-span-8 bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2 outline-none focus:border-wabi-accent">
+                    </div>
+                    <div>
+                        <textarea id="custom-note-desc" placeholder="詳細內容說明、備註或導航地點 (選填)" rows="2"
+                                  class="w-full bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2 outline-none focus:border-wabi-accent resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-wabi-accent text-white py-2 rounded-xl text-xs font-bold hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-plus"></i> 新增至當日行程與備註
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-wabi-card rounded-2xl border border-wabi-border p-4 shadow-xs space-y-3">
+                <div class="flex items-center justify-between border-b border-wabi-border/60 pb-2">
+                    <span class="font-bold text-xs text-wabi-text flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-map-location-dot text-wabi-accent"></i> 當日景點與地標互動地圖
+                    </span>
+                    <button onclick="openFullMapModal()" class="text-[10px] bg-wabi-accent text-white px-2.5 py-1 rounded-lg font-bold shadow-2xs hover:opacity-90 transition-all flex items-center gap-1 whitespace-nowrap">
+                        <i class="fa-solid fa-expand"></i> 全螢幕地圖
+                    </button>
+                </div>
+                
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar text-[11px] text-wabi-text py-0.5 whitespace-nowrap">
+                    <span class="font-bold text-wabi-muted shrink-0">獨立圖例：</span>
+                    <div class="flex items-center gap-1 shrink-0"><span class="w-3 h-3 rounded-full inline-block" style="background-color: #6B7A70;"></span> <span>景點</span></div>
+                    <div class="flex items-center gap-1 shrink-0"><span class="w-3 h-3 rounded-full inline-block" style="background-color: #B46A55;"></span> <span>餐廳</span></div>
+                    <div class="flex items-center gap-1 shrink-0"><span class="w-3 h-3 rounded-full inline-block" style="background-color: #7D8B96;"></span> <span>住宿/交通</span></div>
+                    <div class="flex items-center gap-1 shrink-0"><span class="w-3 h-3 rounded-full inline-block" style="background-color: #8E735B;"></span> <span>購物</span></div>
+                    <div class="flex items-center gap-1 shrink-0"><span class="w-3 h-3 rounded-full inline-block" style="background-color: #5E7387;"></span> <span>其他</span></div>
+                </div>
+
+                <div id="day-leaflet-map" class="w-full h-48 rounded-xl border border-wabi-border z-0"></div>
+            </div>
+        </section>
+
+        <section id="page-prep" class="page-view hidden p-4 space-y-4">
+            <div class="border-b border-wabi-border pb-2 flex items-center justify-between gap-2">
+                <div class="min-w-0 flex-1">
+                    <h2 class="text-base font-bold wabi-title text-wabi-text truncate">📋 最新待辦事項與預約狀態</h2>
+                    <p class="text-xs text-wabi-muted truncate">MASTER 核心門票、交通票券與預約追蹤</p>
+                </div>
+                <span id="todo-progress-badge" class="text-xs bg-[#F7F2E8] text-[#7A6B52] px-2.5 py-1 rounded-full font-bold border border-[#E5DAC5] whitespace-nowrap shrink-0">完成 0 / 11</span>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs space-y-3">
+                    <h3 class="font-bold text-wabi-text text-sm wabi-title border-b border-wabi-border/60 pb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-square-plus text-wabi-accent"></i> 自行新增代辦事項
+                    </h3>
+                    <form onsubmit="addCustomTodo(event)" class="space-y-2.5">
+                        <div>
+                            <input type="text" id="new-todo-title" placeholder="代辦事項名稱 (例如: 預約餐廳、購買票券)" required
+                                   class="w-full bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2.5 outline-none focus:border-wabi-accent">
+                        </div>
+                        <div class="grid grid-cols-12 gap-2">
+                            <input type="text" id="new-todo-desc" placeholder="詳細說明 (選填)" 
+                                   class="col-span-7 bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2.5 outline-none focus:border-wabi-accent">
+                            <input type="text" id="new-todo-time" placeholder="預定時間/期限" 
+                                   class="col-span-5 bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2.5 outline-none focus:border-wabi-accent">
+                        </div>
+                        <button type="submit" class="w-full bg-wabi-accent text-white py-2.5 rounded-xl text-xs font-bold hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-plus"></i> 新增至待辦清單
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs space-y-3">
+                    <h3 class="font-bold text-wabi-text text-sm wabi-title border-b border-wabi-border/60 pb-2 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-ticket text-wabi-accent"></i> 門票、交通與預約總表</span>
+                        <span class="text-[11px] text-wabi-muted font-normal">狀態與時間自動儲存</span>
+                    </h3>
+                    <div id="todo-items-container" class="space-y-2.5 text-xs"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-ai" class="page-view hidden p-4 space-y-3">
+            <div class="bg-gradient-to-r from-wabi-accent/10 via-[#EAE5D9]/50 to-[#EFE8D8]/50 p-4 rounded-2xl border border-wabi-accent/20 flex items-start justify-between gap-2">
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-wabi-accent text-sm"></i>
+                        <h2 class="text-sm font-bold wabi-title text-wabi-text whitespace-nowrap">Gemini 3 隨身 AI 旅伴</h2>
+                    </div>
+                    <p class="text-[11px] text-wabi-muted mt-0.5 leading-relaxed">支援即時聯網搜尋、📸 拍照翻譯菜單、收據自動記帳與語音發音。</p>
+                </div>
+                <span class="shrink-0 text-[10px] bg-wabi-accent text-white px-2 py-0.5 rounded-full font-mono whitespace-nowrap">Multimodal</span>
+            </div>
+
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 text-xs -mx-4 px-4">
+                <button onclick="triggerPhotoUpload()" 
+                        class="whitespace-nowrap px-3 py-1.5 bg-[#EAE5D9]/60 text-wabi-accent rounded-xl border border-[#DCD5C5] shadow-2xs hover:bg-wabi-accent hover:text-white active:scale-95 transition-all text-[11px] font-bold">
+                    📸 拍照翻譯菜單/看板
+                </button>
+                <button onclick="sendQuickPrompt('請告訴我神戶動物王國有哪些必看的表演活動，以及企鵝餵食整理券的注意事項？')" 
+                        class="whitespace-nowrap px-3 py-1.5 bg-[#F4EFE6] text-[#7A6B52] rounded-xl border border-[#E5DAC5] shadow-2xs hover:bg-wabi-accent hover:text-white active:scale-95 transition-all text-[11px] font-bold">
+                    🐾 神戶動物王國表演時間
+                </button>
+                <button onclick="sendQuickPrompt('請比較 10/21 梅田午餐備選（うどん兎麦、お好み焼ききじ、赤白）與主要餐廳（にし家 Grand Front大阪店）的特色。')" 
+                        class="whitespace-nowrap px-3 py-1.5 bg-wabi-card text-wabi-text rounded-xl border border-wabi-border shadow-2xs hover:border-wabi-accent active:scale-95 transition-all text-[11px]">
+                    🍜 梅田午餐推薦比較
+                </button>
+            </div>
+
+            <div id="ai-chat-window" class="bg-wabi-card rounded-2xl border border-wabi-border p-3.5 space-y-3 min-h-[340px] max-h-[52vh] overflow-y-auto no-scrollbar shadow-inner text-xs">
+                <div class="flex items-start gap-2.5">
+                    <div class="w-7 h-7 rounded-full bg-wabi-accent text-white flex items-center justify-center shrink-0 text-xs shadow-xs">
+                        <i class="fa-solid fa-sparkles"></i>
+                    </div>
+                    <div class="bg-wabi-bg p-3 rounded-2xl rounded-tl-xs border border-wabi-border/60 max-w-[85%] text-wabi-text leading-relaxed">
+                        <p class="font-semibold text-wabi-accent mb-1">您好！我是你們 2026 京阪神 MASTER 行程的專屬 AI 導遊 🇯🇵</p>
+                        <p>已同步您的最新統整版行程！隨時為您解答梅田午餐、神戶牛餐廳 Tabelog 評分、USJ 攻略或日語翻譯！</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ai-image-preview-container" class="hidden relative bg-wabi-card p-2 rounded-xl border border-wabi-border flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <img id="ai-image-preview" class="w-12 h-12 object-cover rounded-lg border border-wabi-border" alt="預覽圖片">
+                    <div>
+                        <span class="text-[11px] font-bold text-wabi-text block" id="ai-image-preview-title">已選取圖片</span>
+                        <span class="text-[10px] text-wabi-muted">Gemini 視覺模型將進行解析</span>
+                    </div>
+                </div>
+                <button type="button" onclick="clearSelectedImage()" class="text-xs text-wabi-muted hover:text-red-500 p-1">
+                    <i class="fa-solid fa-circle-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <input type="file" id="ai-photo-input" accept="image/*" class="hidden" onchange="onPhotoSelected(event)">
+
+            <form id="ai-chat-form" class="flex gap-2">
+                <button type="button" onclick="triggerPhotoUpload()" title="上傳或拍攝照片"
+                        class="bg-wabi-card border border-wabi-border text-wabi-accent hover:border-wabi-accent px-3 py-2.5 rounded-xl text-sm flex items-center justify-center shrink-0 shadow-xs active:scale-95 transition-all">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+                <input type="text" id="ai-user-input" placeholder="輸入問題或拍照（例：梅田午餐推薦、日語點餐）..." required
+                       class="flex-1 bg-wabi-card border border-wabi-border rounded-xl px-3 py-2.5 text-xs text-wabi-text placeholder:text-wabi-muted/70 outline-none focus:border-wabi-accent shadow-xs">
+                <button type="submit" id="ai-send-btn" class="bg-wabi-accent text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-xs hover:opacity-90 active:scale-95 transition-all flex items-center justify-center shrink-0 whitespace-nowrap">
+                    <i class="fa-solid fa-paper-plane mr-1"></i> 發送
+                </button>
+            </form>
+        </section>
+
+        <section id="page-info" class="page-view hidden p-4 space-y-4">
+            <div class="border-b border-wabi-border pb-2 flex items-center justify-between">
+                <div>
+                    <h2 class="text-base font-bold wabi-title text-wabi-text truncate">ℹ️ 核心景點特點與注意事項</h2>
+                    <p class="text-xs text-wabi-muted truncate">資深導遊嚴選 ｜ 航班、飯店、景點深度攻略</p>
+                </div>
+                <button onclick="openFullMapModal(true)" class="bg-wabi-accent text-white text-xs px-3 py-1.5 rounded-xl font-bold shadow-xs whitespace-nowrap">
+                    🗺️ 全程景點總地圖
+                </button>
+            </div>
+
+            <div class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs space-y-4">
+                <h3 class="font-bold wabi-title text-sm text-wabi-accent border-b border-wabi-border/60 pb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-compass text-wabi-accent"></i> 資深導遊帶路：必訪核心景點深度解析
+                </h3>
+
+                <div class="space-y-2 bg-wabi-bg p-3.5 rounded-xl border border-wabi-border/60 shadow-2xs">
+                    <div class="flex items-center justify-between border-b border-wabi-border/40 pb-1.5">
+                        <span class="font-bold text-wabi-text text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-earth-americas text-wabi-accent"></i> 🌟 USJ 必玩亮點與美食指南 🌎
+                        </span>
+                        <span class="text-[10px] bg-[#B46A55]/15 text-[#B46A55] px-2 py-0.5 rounded font-bold">10/20 (二) 攻略</span>
+                    </div>
+                    
+                    <div class="text-[11px] text-wabi-text leading-relaxed space-y-2">
+                        <div>
+                            <span class="font-bold text-[#B46A55]">🔥 必玩設施：</span>
+                            <ul class="list-disc pl-4 space-y-1 mt-1">
+                                <li><b>超級任天堂世界：</b><span class="text-[#B46A55] font-semibold">瑪利歐賽車～庫巴的挑戰書～</span>（AR 互動競速）、耀西大冒險。</li>
+                                <li><b>哈利波特的魔法世界：</b><span class="text-[#B46A55] font-semibold">哈利波特禁忌之旅</span>（極震撼 4D 體感）、鷹馬的飛行。</li>
+                                <li><b>小小兵樂園：</b><span class="text-[#B46A55] font-semibold">小小兵瘋狂乘車遊</span>。</li>
+                                <li><b>好萊塢區：</b><span class="text-[#B46A55] font-semibold">好萊塢美夢・逆轉世界</span>（刺激雲霄飛車）。</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <span class="font-bold text-[#C49A65]">🍔 必吃美食：</span>
+                            <ul class="list-disc pl-4 space-y-1 mt-1">
+                                <li><b>奇諾比奧咖啡店（瑪利歐區）：</b>必點<span class="text-[#C49A65] font-semibold">問號方塊提拉米蘇</span>、瑪利歐漢堡、超級蘑菇比薩碗。</li>
+                                <li><b>三隻掃帚（哈利波特區）：</b>必喝招牌<span class="text-[#C49A65] font-semibold">「冰奶油啤酒」</span>（香甜綿密無酒精）、烤雞排餐。</li>
+                                <li><b>園區小吃：</b><span class="text-[#C49A65] font-semibold">小小兵爆米花桶</span>、人氣火雞腿。</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-wabi-card p-2.5 rounded-lg border border-wabi-border/60">
+                            <span class="font-bold text-wabi-accent block mb-0.5">💡 實用攻略：</span>
+                            官方表定開園時間通常會<span class="text-[#B46A55] font-bold">提早 15～30 分鐘</span>，建議<span class="text-[#B46A55] font-bold">提早排隊入園</span>，第一時間<span class="text-[#B46A55] font-bold">直衝瑪利歐園區</span>省去抽整理券的麻煩。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3 bg-wabi-bg p-3.5 rounded-xl border border-wabi-border/60 shadow-2xs">
+                    <div class="flex items-center justify-between border-b border-wabi-border/40 pb-1.5">
+                        <span class="font-bold text-wabi-text text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-paw text-[#6B7A70]"></i> 🐾 神戶動物王國：表演與互動活動全攻略
+                        </span>
+                        <span class="text-[10px] bg-[#6B7A70]/15 text-[#6B7A70] px-2 py-0.5 rounded font-bold">10/23 (五) 攻略</span>
+                    </div>
+
+                    <div class="text-[11px] text-wabi-text leading-relaxed space-y-2.5">
+                        <p class="text-wabi-muted">
+                            神戶動物王國擁有固定且豐富的表演與解說活動。⚠️ <span class="text-[#B46A55] font-bold">官方每日最新時刻表會根據季節、天氣及動物狀態微調</span>，入園時請務必<span class="text-[#6B7A70] font-bold">掃描入口處 QR Code</span> 或領取紙本告示，以當天公佈為準。
+                        </p>
+
+                        <div class="overflow-hidden border border-wabi-border rounded-xl bg-wabi-card">
+                            <div class="bg-[#EAE5D9] px-3 py-1.5 border-b border-wabi-border font-bold text-xs text-wabi-text flex justify-between items-center">
+                                <span>熱門表演與活動時間表</span>
+                                <span class="text-[10px] font-normal text-wabi-muted">通常一天 1~2 場</span>
+                            </div>
+                            <div class="divide-y divide-wabi-border/60 text-[11px]">
+                                <div class="p-2.5 flex flex-col gap-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-[#6B7A70] text-xs">🦅 Wings (飛鳥飛行秀)</span>
+                                        <span class="bg-[#6B7A70]/10 text-[#6B7A70] font-mono px-2 py-0.5 rounded font-bold">11:30、14:30</span>
+                                    </div>
+                                    <p class="text-wabi-muted text-[10.5px]">猛禽（老鷹、鴞）與彩色鸚鵡在池塘上方低空飛過，場面極具震撼力（主要於戶外「風之運動場」舉辦）。</p>
+                                </div>
+                                <div class="p-2.5 flex flex-col gap-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-[#C49A65] text-xs">🐕 Buddy (工作犬 / 牧羊表演)</span>
+                                        <span class="bg-[#C49A65]/10 text-[#C49A65] font-mono px-2 py-0.5 rounded font-bold">13:30</span>
+                                    </div>
+                                    <p class="text-wabi-muted text-[10.5px]">邊境牧羊犬展示精湛的牧羊與飛盤特技（夏季高溫時段可能暫停或改至室內）。</p>
+                                </div>
+                                <div class="p-2.5 flex flex-col gap-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-[#B46A55] text-xs">🐧 企鵝餵食點心 <span class="text-[9px] bg-[#B46A55] text-white px-1.5 py-0.2 rounded font-normal ml-1">需整理券</span></span>
+                                        <span class="bg-[#B46A55]/10 text-[#B46A55] font-mono px-2 py-0.5 rounded font-bold">11:00、14:00</span>
+                                    </div>
+                                    <p class="text-wabi-muted text-[10.5px]">體驗親手餵食企鵝，每場有限額，需提前領取整理券。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs space-y-3">
+                <div class="flex items-center justify-between border-b border-wabi-border/60 pb-2 gap-2">
+                    <span class="font-bold wabi-title text-sm text-wabi-text whitespace-nowrap"><i class="fa-solid fa-plane text-wabi-accent mr-1"></i> 台灣虎航 Tigerair</span>
+                    <span class="text-xs bg-[#F4EFE6] text-[#7A6B52] px-2 py-0.5 rounded-full font-semibold whitespace-nowrap">兩人各 25kg 託運</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <div class="bg-wabi-bg p-2.5 rounded-xl border border-wabi-border/50">
+                        <div class="text-wabi-muted text-[10px] uppercase font-bold whitespace-nowrap">去程 10/17 (六)</div>
+                        <div class="font-bold text-wabi-text text-sm mt-0.5">IT710</div>
+                        <div class="mt-1 text-wabi-text">07:45 桃園 (T1)</div>
+                        <div class="text-wabi-muted">11:30 關西 (T1)</div>
+                    </div>
+                    <div class="bg-wabi-bg p-2.5 rounded-xl border border-wabi-border/50">
+                        <div class="text-wabi-muted text-[10px] uppercase font-bold whitespace-nowrap">回程 10/24 (六)</div>
+                        <div class="font-bold text-wabi-text text-sm mt-0.5">IT711</div>
+                        <div class="mt-1 text-wabi-text">12:20 關西 (T1)</div>
+                        <div class="text-wabi-muted">14:15 桃園 (T1)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-expense" class="page-view hidden p-4 space-y-4">
+            <div class="border-b border-wabi-border pb-2 flex items-center justify-between gap-2">
+                <div class="min-w-0 flex-1">
+                    <h2 class="text-base font-bold wabi-title text-wabi-text truncate">💴 隨手記帳</h2>
+                    <p class="text-xs text-wabi-muted truncate">記錄日本旅遊消費支出</p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="exportExpensesToExcel()" class="bg-wabi-accent text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs hover:opacity-90 active:scale-95 transition-all flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-file-excel"></i> 匯出 Excel
+                    </button>
+                    <span id="rate-display" class="text-xs font-mono font-bold text-wabi-accent whitespace-nowrap">匯率: 0.215</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-wabi-card p-3 rounded-2xl border border-wabi-border text-center">
+                    <span class="text-[10px] text-wabi-muted font-medium block whitespace-nowrap">日圓總計 (JPY)</span>
+                    <span id="total-jpy" class="text-base md:text-lg font-bold font-mono text-wabi-text truncate block">¥0</span>
+                </div>
+                <div class="bg-wabi-card p-3 rounded-2xl border border-wabi-border text-center">
+                    <span class="text-[10px] text-wabi-muted font-medium block whitespace-nowrap">折合/總計台幣 (TWD)</span>
+                    <span id="total-twd" class="text-base md:text-lg font-bold font-mono text-wabi-accent truncate block">NT$ 0</span>
+                </div>
+            </div>
+
+            <div class="bg-wabi-card p-3 rounded-2xl border border-wabi-border shadow-xs space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-wabi-text"><i class="fa-solid fa-chart-pie text-wabi-accent mr-1"></i> 各類別金額統計</span>
+                </div>
+                <div id="expense-category-totals" class="grid grid-cols-4 gap-1.5 text-[10px]"></div>
+            </div>
+
+            <form id="expense-form" class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs space-y-3">
+                <h3 class="text-xs font-bold text-wabi-text uppercase tracking-wider">➕ 新增消費筆數</h3>
+                <div class="grid grid-cols-12 gap-2">
+                    <input type="text" id="exp-name" placeholder="品項名稱 (例如: 康四郎晚餐)" required
+                           class="col-span-7 bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2.5 outline-none focus:border-wabi-accent">
+                    <input type="number" id="exp-amount" placeholder="金額" required
+                           class="col-span-5 bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2.5 outline-none focus:border-wabi-accent font-mono">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[10px] text-wabi-muted font-bold block mb-1">支付方式</label>
+                        <select id="exp-payment" class="w-full bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2.5 outline-none focus:border-wabi-accent">
+                            <option value="日幣現金">日幣現金</option>
+                            <option value="永豐日幣">永豐日幣</option>
+                            <option value="台新信用卡">台新信用卡</option>
+                            <option value="台幣">台幣 (TWD)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-wabi-muted font-bold block mb-1">類別</label>
+                        <select id="exp-category" class="w-full bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2.5 outline-none focus:border-wabi-accent">
+                            <option value="食">食</option>
+                            <option value="購物">購物</option>
+                            <option value="伴手禮">伴手禮</option>
+                            <option value="代購">代購</option>
+                            <option value="住">住</option>
+                            <option value="行">行</option>
+                            <option value="其他" selected>其他</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <input type="text" id="exp-note" placeholder="備註 (選填)" 
+                           class="w-full bg-wabi-bg border border-wabi-border text-xs rounded-xl p-2.5 outline-none focus:border-wabi-accent">
+                </div>
+                <button type="submit" class="w-full bg-wabi-accent text-white py-2.5 rounded-xl text-xs font-bold hover:opacity-90 active:scale-95 transition-all">
+                    新增記帳
+                </button>
+            </form>
+
+            <div class="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5 text-xs">
+                <span class="text-wabi-muted font-bold text-[11px] shrink-0 mr-1">篩選：</span>
+                <button onclick="setExpenseFilter('all', this)" class="exp-filter-btn tab-active px-2.5 py-1 rounded-lg border border-wabi-border text-[11px] font-medium whitespace-nowrap">全部</button>
+                <button onclick="setExpenseFilter('食', this)" class="exp-filter-btn px-2.5 py-1 bg-wabi-card text-wabi-text rounded-lg border border-wabi-border text-[11px] whitespace-nowrap">食</button>
+                <button onclick="setExpenseFilter('購物', this)" class="exp-filter-btn px-2.5 py-1 bg-wabi-card text-wabi-text rounded-lg border border-wabi-border text-[11px] whitespace-nowrap">購物</button>
+                <button onclick="setExpenseFilter('伴手禮', this)" class="exp-filter-btn px-2.5 py-1 bg-wabi-card text-wabi-text rounded-lg border border-wabi-border text-[11px] whitespace-nowrap">伴手禮</button>
+                <button onclick="setExpenseFilter('代購', this)" class="exp-filter-btn px-2.5 py-1 bg-wabi-card text-wabi-text rounded-lg border border-wabi-border text-[11px] whitespace-nowrap">代購</button>
+                <button onclick="setExpenseFilter('住', this)" class="exp-filter-btn px-2.5 py-1 bg-wabi-card text-wabi-text rounded-lg border border-wabi-border text-[11px] whitespace-nowrap">住</button>
+                <button onclick="setExpenseFilter('行', this)" class="exp-filter-btn px-2.5 py-1 bg-wabi-card text-wabi-text rounded-lg border border-wabi-border text-[11px] whitespace-nowrap">行</button>
+                <button onclick="setExpenseFilter('其他', this)" class="exp-filter-btn px-2.5 py-1 bg-wabi-card text-wabi-text rounded-lg border border-wabi-border text-[11px] whitespace-nowrap">其他</button>
+            </div>
+
+            <div id="expense-list" class="space-y-2"></div>
+        </section>
+
+    </main>
+
+    <nav class="fixed bottom-0 inset-x-0 bg-wabi-card/95 backdrop-blur-md border-t border-wabi-border px-2 py-2.5 pb-safe flex items-center justify-around z-30 shadow-lg">
+        <button onclick="switchPage('itinerary')" id="nav-itinerary" class="nav-btn nav-active flex flex-col items-center gap-0.5 text-wabi-muted transition-colors flex-1">
+            <i class="fa-solid fa-calendar-day text-base"></i>
+            <span class="text-[10px] whitespace-nowrap">每日行程</span>
+        </button>
+        <button onclick="switchPage('prep')" id="nav-prep" class="nav-btn flex flex-col items-center gap-0.5 text-wabi-muted transition-colors flex-1">
+            <i class="fa-solid fa-list-check text-base"></i>
+            <span class="text-[10px] whitespace-nowrap">待辦清單</span>
+        </button>
+        <button onclick="switchPage('ai')" id="nav-ai" class="nav-btn flex flex-col items-center gap-0.5 text-wabi-muted transition-colors flex-1">
+            <i class="fa-solid fa-sparkles text-base text-wabi-accent"></i>
+            <span class="text-[10px] font-bold text-wabi-accent whitespace-nowrap">✨ AI 導遊</span>
+        </button>
+        <button onclick="switchPage('info')" id="nav-info" class="nav-btn flex flex-col items-center gap-0.5 text-wabi-muted transition-colors flex-1">
+            <i class="fa-solid fa-circle-info text-base"></i>
+            <span class="text-[10px] whitespace-nowrap">實用資訊</span>
+        </button>
+        <button onclick="switchPage('expense')" id="nav-expense" class="nav-btn flex flex-col items-center gap-0.5 text-wabi-muted transition-colors flex-1">
+            <i class="fa-solid fa-coins text-base"></i>
+            <span class="text-[10px] whitespace-nowrap">隨手記帳</span>
+        </button>
+    </nav>
+
+    <div id="map-modal" class="fixed inset-0 bg-black/70 z-50 flex flex-col hidden backdrop-blur-xs">
+        <div class="bg-wabi-card px-4 py-3 flex items-center justify-between border-b border-wabi-border shrink-0">
+            <div>
+                <h3 id="map-modal-title" class="font-bold text-sm wabi-title text-wabi-text">🗺️ 京阪神 8 日行程互動地圖</h3>
+                <p class="text-[10px] text-wabi-muted">點擊標記可檢視景點資訊與一鍵導航</p>
+            </div>
+            <button onclick="closeFullMapModal()" class="w-8 h-8 bg-wabi-bg rounded-full flex items-center justify-center text-wabi-text hover:bg-wabi-border transition-colors">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+        <div class="bg-wabi-bg px-4 py-2 border-b border-wabi-border flex items-center gap-3 overflow-x-auto no-scrollbar text-xs shrink-0 whitespace-nowrap">
+            <span class="font-bold text-wabi-muted shrink-0">獨立圖例：</span>
+            <div class="flex items-center gap-1 shrink-0"><span class="w-3.5 h-3.5 rounded-full inline-block" style="background-color: #6B7A70;"></span> <span>景點</span></div>
+            <div class="flex items-center gap-1 shrink-0"><span class="w-3.5 h-3.5 rounded-full inline-block" style="background-color: #B46A55;"></span> <span>餐廳</span></div>
+            <div class="flex items-center gap-1 shrink-0"><span class="w-3.5 h-3.5 rounded-full inline-block" style="background-color: #7D8B96;"></span> <span>住宿/交通</span></div>
+            <div class="flex items-center gap-1 shrink-0"><span class="w-3.5 h-3.5 rounded-full inline-block" style="background-color: #8E735B;"></span> <span>購物</span></div>
+            <div class="flex items-center gap-1 shrink-0"><span class="w-3.5 h-3.5 rounded-full inline-block" style="background-color: #5E7387;"></span> <span>其他</span></div>
+        </div>
+        <div id="fullscreen-leaflet-map" class="flex-1 w-full z-0"></div>
+    </div>
+
+    <script>
+        const itineraryData = [
+            {
+                date: '10/17',
+                week: '六',
+                title: '10/17（六）｜桃園 → 京都＋TeamLab',
+                subtitle: '桃園 T1 ➔ 關西機場 T1 ➔ 京都 ➔ Sanco Inn ➔ TeamLab',
+                badge: '京都 Day 1',
+                events: [
+                    { time: '07:45', type: 'hotel', icon: '✈', title: '桃園 T1 → 關西機場 T1', note: '台灣虎航 IT710', nav: 'Kansai International Airport', lat: 34.4342, lng: 135.2447 },
+                    { time: '11:30', type: 'hotel', icon: '🛬', title: '抵達關西機場 T1', note: '入境＋領行李', nav: 'Kansai Airport Terminal 1', lat: 34.4342, lng: 135.2447 },
+                    { time: '約14:00~15:00', type: 'hotel', icon: '🚆', title: '抵達京都', note: '依入境及交通狀況', nav: 'Kyoto Station', lat: 34.9858, lng: 135.7588 },
+                    { time: '抵達後', type: 'hotel', icon: '🏨', title: 'Sanco Inn Kyoto Hachijoguchi Shikinoyu', note: '放行李／入住', nav: 'Sanco Inn Kyoto Hachijoguchi', lat: 34.9835, lng: 135.7575 },
+                    { 
+                        time: 'TeamLab前', 
+                        type: 'food', 
+                        icon: '🍜', 
+                        title: '晚餐拉麵/料理四選一', 
+                        note: '🟡 備選：\n1. 本家 第一旭 本店 (Tabelog 3.73)\n2. 麺や虎鉄 京都拉麵小路店\n3. 中村商店 京都拉麵小路店\n4. 田ごと 京都ポルタ店', 
+                        nav: 'Honke Daiichiasahi',
+                        lat: 34.9850,
+                        lng: 135.7580
+                    },
+                    { time: '約17:00~17:30', type: 'spot', icon: '🎨', title: 'TeamLab Biovortex Kyoto', note: '🎫 待購票', nav: '21-5 Higashikujo Higashiiwamotocho, Minami Ward, Kyoto', lat: 34.9822, lng: 135.7593 },
+                    { time: 'TeamLab後', type: 'food', icon: '🌙', title: '町衆料理 京もん 八条口店', note: '🟡 有餓再去 (居酒屋/京料理)', nav: 'Kyoto Station Hachijoguchi', lat: 34.9835, lng: 135.7575 }
+                ]
+            },
+            {
+                date: '10/18',
+                week: '日',
+                title: '10/18（日）｜清水寺＋東山＋祇園',
+                subtitle: 'Sanco Inn 出發 ➔ 清水寺 ➔ 湯豆腐 ➔ 二三年坂 ➔ 祇園',
+                badge: '京都 Day 2',
+                events: [
+                    { time: '09:30', type: 'hotel', icon: '🏨', title: 'Sanco Inn 出發', note: '—', nav: 'Sanco Inn Kyoto Hachijoguchi', lat: 34.9835, lng: 135.7575 },
+                    { time: '10:00~11:30', type: 'spot', icon: '🏯', title: '清水寺', note: '約 1.5 小時', nav: 'Kiyomizu-dera', lat: 34.9949, lng: 135.7850 },
+                    { 
+                        time: '11:30~12:45', 
+                        type: 'food', 
+                        icon: '🍲', 
+                        title: '清水順正 おかべ家', 
+                        note: '✅ 正式午餐 (湯豆腐/京料理，Tabelog 3.41)', 
+                        nav: 'Kiyomizu Junsei Okabeya',
+                        lat: 34.9954,
+                        lng: 135.7838
+                    },
+                    { time: '12:45~14:15', type: 'spot', icon: '🏘️', title: '二年坂／三年坂', note: '散步、逛街', nav: 'Ninenzaka', lat: 34.9972, lng: 135.7820 },
+                    { time: '14:15~15:00', type: 'food', icon: '🍵', title: 'かさぎ屋 Kasagiya', note: '下午茶 (和菓子/甘味處，Tabelog 3.62)', nav: 'Kasagiya Kyoto', lat: 34.9975, lng: 135.7818 },
+                    { time: '15:00~15:40', type: 'spot', icon: '⛩️', title: '八坂神社', note: '約 40 分鐘', nav: 'Yasaka Shrine', lat: 35.0037, lng: 135.7786 },
+                    { time: '15:40~16:40', type: 'spot', icon: '👘', title: '花見小路／祇園', note: '約 1 小時', nav: 'Gion', lat: 35.0035, lng: 135.7750 },
+                    { 
+                        time: '約18:00', 
+                        type: 'food', 
+                        icon: '🥩', 
+                        title: '晚餐二選一', 
+                        note: '1. モリタ屋 JR京都伊勢丹店 (壽喜燒)\n2. 京都力山 祇園店 (和牛燒肉)', 
+                        nav: 'JR Kyoto Isetan',
+                        lat: 34.9858,
+                        lng: 135.7588
+                    },
+                    { time: '晚餐前後', type: 'shopping', icon: '🛍️', title: '京都高島屋', note: '約 1.5 小時', nav: 'Kyoto Takashimaya', lat: 35.0030, lng: 135.7680 },
+                    { time: '晚餐前後', type: 'shopping', icon: '🎁', title: '滿月 JR京都伊勢丹店 ＆ 仙太郎', note: '阿闍梨餅 ＆ 彈性採買', nav: 'JR Kyoto Isetan', lat: 34.9858, lng: 135.7588 }
+                ]
+            },
+            {
+                date: '10/19',
+                week: '一',
+                title: '10/19（一）｜宇治＋伏見稻荷＋取行李 → 大阪',
+                subtitle: '三星園 ➔ 平等院 ➔ 午餐 ➔ 宇治上神社 ➔ 通圓本店 ➔ 伏見稻荷 ➔ 回京都取行李 ➔ OMO7 大阪',
+                badge: '轉移大阪',
+                events: [
+                    { time: '08:20', type: 'hotel', icon: '🏨', title: 'Sanco Inn 退房', note: '⭐ 行李寄放飯店，晚上回來取', nav: 'Sanco Inn Kyoto Hachijoguchi', lat: 34.9835, lng: 135.7575 },
+                    { time: '08:30~09:00', type: 'hotel', icon: '🚆', title: '京都站 → JR宇治站', note: 'JR奈良線', nav: 'Uji Station', lat: 34.8903, lng: 135.8105 },
+                    { time: '09:00~09:20', type: 'spot', icon: '🚶', title: 'JR宇治站 → 三星園', note: '提早報到', nav: 'Mitsuboshi-en Kambayashi Sannyu', lat: 34.8903, lng: 135.8105 },
+                    { time: '09:30~10:15', type: 'food', icon: '🍵', title: '三星園 上林三入本店｜抹茶體驗', note: '⭐ 建議預約09:30 (Tabelog 3.51)', nav: 'Mitsuboshi-en Kambayashi Sannyu', lat: 34.8903, lng: 135.8105 },
+                    { time: '10:15~10:25', type: 'spot', icon: '🚶', title: '三星園 → 平等院', note: '平等院表參道，順路', nav: 'Byodoin', lat: 34.8890, lng: 135.8078 },
+                    { time: '10:25~11:25', type: 'spot', icon: '🏯', title: '平等院', note: '約 1 小時', nav: 'Byodoin', lat: 34.8890, lng: 135.8078 },
+                    { 
+                        time: '11:30~12:30', 
+                        type: 'food', 
+                        icon: '🍱', 
+                        title: '宇治午餐二選一', 
+                        note: '1. 櫟（くぬぎ） (茶蕎麥)\n2. 京料理 宇治川', 
+                        nav: 'Uji Station',
+                        lat: 34.8903,
+                        lng: 135.8105
+                    },
+                    { time: '12:30~13:00', type: 'spot', icon: '🌿', title: '宇治川／宇治橋', note: '飯後散步', nav: 'Uji Bridge', lat: 34.8915, lng: 135.8115 },
+                    { time: '13:00~13:40', type: 'spot', icon: '⛩️', title: '宇治上神社', note: '約 40 分鐘', nav: 'Ujigami Shrine', lat: 34.8943, lng: 135.8142 },
+                    { time: '13:40~14:10', type: 'food', icon: '🍵', title: '通圓本店', note: '茶點 (Tabelog 3.48)', nav: 'Tsuen Tea', lat: 34.8912, lng: 135.8112 },
+                    { time: '14:10~14:30', type: 'food', icon: '🍵', title: '堀井七茗園', note: '🟡 時間不足優先刪除', nav: 'Horii Shichimeen', lat: 34.8905, lng: 135.8100 },
+                    { time: '14:30~15:10', type: 'hotel', icon: '🚆', title: '宇治 → 伏見稻荷', note: '含步行／候車緩衝', nav: 'Fushimi-Inari Station', lat: 34.9671, lng: 135.7727 },
+                    { time: '15:10~16:25', type: 'spot', icon: '⛩️', title: '伏見稻荷大社', note: '約 1 小時 15 分', nav: 'Fushimi Inari Taisha', lat: 34.9671, lng: 135.7727 },
+                    { time: '16:25~16:45', type: 'hotel', icon: '🚆', title: 'JR稻荷站 → 京都站', note: '返回京都', nav: 'Kyoto Station', lat: 34.9858, lng: 135.7588 },
+                    { time: '17:00~17:15', type: 'hotel', icon: '🧳', title: 'Sanco Inn 取寄放行李', note: '⭐ 必要行程', nav: 'Sanco Inn Kyoto Hachijoguchi', lat: 34.9835, lng: 135.7575 },
+                    { time: '約17:30~18:30', type: 'hotel', icon: '🚆', title: '京都 → 大阪', note: '前往住宿', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '約18:30~19:00', type: 'hotel', icon: '🏨', title: 'OMO7 大阪 Check-in', note: '大阪第1晚', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '19:00後', type: 'food', icon: '🍽️', title: '大阪晚餐／自由活動', note: '自由探索', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 }
+                ]
+            },
+            {
+                date: '10/20',
+                week: '二',
+                title: '10/20（二）｜日本環球影城 USJ',
+                subtitle: 'OMO7 大阪出發 ➔ 全日 USJ 暢玩',
+                badge: 'USJ 環球',
+                events: [
+                    { time: '約07:00', type: 'hotel', icon: '🏨', title: 'OMO7 大阪出發', note: '依當日開園時間', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '早上～晚上', type: 'spot', icon: '🌎', title: 'Universal Studios Japan', note: '🎫 全天暢玩任天堂與哈利波特', nav: 'Universal Studios Japan', lat: 34.6654, lng: 135.4323 },
+                    { time: '中午', type: 'food', icon: '🍽️', title: '園區內彈性用餐', note: '園區餐廳', nav: 'Universal Studios Japan', lat: 34.6654, lng: 135.4323 },
+                    { time: '晚上', type: 'hotel', icon: '🏨', title: '返回 OMO7 大阪', note: '好好休息', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 }
+                ]
+            },
+            {
+                date: '10/21',
+                week: '三',
+                title: '10/21（三）｜通天閣＋新世界＋梅田＋Alpen＋YONEX＋康四郎',
+                subtitle: '新世界 ➔ 梅田午餐 ➔ Alpen & YONEX ➔ 康四郎晚餐 ➔ 難波 PARKS',
+                badge: '大阪購物',
+                events: [
+                    { time: '09:30', type: 'hotel', icon: '🏨', title: 'OMO7 大阪出發', note: '—', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '09:40~10:30', type: 'spot', icon: '🗼', title: '通天閣', note: '約 50 分鐘', nav: 'Tsutenkaku', lat: 34.6525, lng: 135.5063 },
+                    { time: '10:30~11:10', type: 'spot', icon: '🏮', title: '新世界商店街', note: '約 40 分鐘', nav: 'Shinsekai', lat: 34.6530, lng: 135.5050 },
+                    { time: '11:10~11:45', type: 'hotel', icon: '🚆', title: '新世界 → 梅田', note: '前往 Grand Front Osaka', nav: 'Grand Front Osaka', lat: 34.7024, lng: 135.4959 },
+                    { 
+                        time: '11:45~13:00', 
+                        type: 'food', 
+                        icon: '🍜', 
+                        title: 'にし家 Grand Front大阪店 ⭐ 主要午餐', 
+                        note: '大阪烏龍／烏龍壽喜鍋 (Tabelog 3.52)', 
+                        nav: 'Grand Front Osaka',
+                        lat: 34.7024,
+                        lng: 135.4959
+                    },
+                    { time: '13:00~15:15', type: 'shopping', icon: '🏃', title: 'Alpen OSAKA', note: '大型運動用品購物', nav: 'Alpen OSAKA', lat: 34.7024, lng: 135.4959 },
+                    { time: '15:15~16:00', type: 'shopping', icon: '🏸', title: 'YONEX OSAKA SHOWROOM', note: 'Grand Front 南館B1', nav: 'Grand Front Osaka South Building', lat: 34.7020, lng: 135.4955 },
+                    { time: '16:00~17:30', type: 'shopping', icon: '🛍️', title: '梅田彈性逛街／前往南船場', note: '交通與休息', nav: 'Umeda', lat: 34.7024, lng: 135.4959 },
+                    { 
+                        time: '18:30~20:00', 
+                        type: 'food', 
+                        icon: '🐷', 
+                        title: 'とんかつ 康四郎 ✅ 正式晚餐', 
+                        note: '高級炸豬排 (Tabelog 3.73)', 
+                        nav: 'Tonkatsu Koshiro',
+                        lat: 34.6732,
+                        lng: 135.5012
+                    },
+                    { time: '晚餐後', type: 'spot', icon: '🌿', title: '難波 PARKS', note: '夜晚散步', nav: 'Namba Parks', lat: 34.6620, lng: 135.5020 },
+                    { time: '約21:00', type: 'misc', icon: '☁️', title: '難波雲海', note: '🟡 備選', nav: 'Namba Parks', lat: 34.6620, lng: 135.5020 },
+                    { time: '晚上', type: 'hotel', icon: '🏨', title: '返回 OMO7 大阪', note: '—', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 }
+                ]
+            },
+            {
+                date: '10/22',
+                week: '四',
+                title: '10/22（四）｜海遊館＋天保山＋難波＋道頓堀＋心齋橋',
+                subtitle: '海遊館 ➔ 天保山 ➔ 千房午餐 ➔ 道頓堀/心齋橋 ➔ 丸花晚餐',
+                badge: '大阪經典',
+                events: [
+                    { time: '09:30', type: 'hotel', icon: '🏨', title: 'OMO7 大阪出發', note: '—', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '10:15~12:30', type: 'spot', icon: '🐋', title: '大阪海遊館', note: '約 2 小時 15 分', nav: 'Osaka Aquarium Kaiyukan', lat: 34.6545, lng: 135.4290 },
+                    { time: '12:30~13:15', type: 'spot', icon: '🎡', title: '天保山／大摩天輪', note: '約 45 分鐘', nav: 'Tempozan Ferris Wheel', lat: 34.6550, lng: 135.4310 },
+                    { time: '13:15~14:00', type: 'hotel', icon: '🚆', title: '天保山 → 難波', note: '地鐵移動', nav: 'Namba', lat: 34.6656, lng: 135.5022 },
+                    { 
+                        time: '14:00~15:00', 
+                        type: 'food', 
+                        icon: '🥞', 
+                        title: '千房 CHIBO ⭐ 主要午餐', 
+                        note: '大阪燒／鐵板燒 (Tabelog 3.21)', 
+                        nav: 'Chibo Dotonbori',
+                        lat: 34.6680,
+                        lng: 135.5020
+                    },
+                    { time: '15:00~16:30', type: 'spot', icon: '📍', title: '道頓堀', note: '固力果／戎橋／法善寺橫丁', nav: 'Dotonbori', lat: 34.6688, lng: 135.5015 },
+                    { time: '16:30~18:30', type: 'shopping', icon: '🛍️', title: '心齋橋', note: '心齋橋筋／大丸／PARCO／美國村', nav: 'Shinsaibashi-suji Shopping Street', lat: 34.6720, lng: 135.5005 },
+                    { 
+                        time: '19:00~21:00', 
+                        type: 'food', 
+                        icon: '🦀', 
+                        title: '丸花 心齋橋 ✅ 正式晚餐', 
+                        note: '螃蟹料理／涮涮鍋 (Tabelog 3.21)', 
+                        nav: 'Maruhana Shinsaibashi',
+                        lat: 34.6710,
+                        lng: 135.5020
+                    },
+                    { time: '晚上', type: 'hotel', icon: '🏨', title: '返回 OMO7 大阪', note: '—', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 }
+                ]
+            },
+            {
+                date: '10/23',
+                week: '五',
+                title: '10/23（五）｜神戶動物王國＋元町＋神戶牛 → 大阪',
+                subtitle: '早起出發 ➔ 神戶動物王國 ➔ 元町商店街 ➔ Steakland 神戶牛 ➔ 返回大阪',
+                badge: '神戶一日',
+                events: [
+                    { time: '07:30~08:00', type: 'hotel', icon: '🏨', title: 'OMO7 大阪出發', note: '早起出發', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '約09:00', type: 'hotel', icon: '🚆', title: '抵達三宮', note: '轉 Port Liner', nav: 'Sannomiya Station', lat: 34.6940, lng: 135.1950 },
+                    { time: '10:00', type: 'spot', icon: '🐾', title: '神戶動物王國入園', note: '核心行程 (一進門先掃 QR Code 看當日時刻表)', nav: 'Kobe Animal Kingdom', lat: 34.6621, lng: 135.2215 },
+                    { time: '10:00~14:45', type: 'spot', icon: '🐾', title: '動物王國＋表演／互動', note: '🦅 Wings飛鳥秀(11:30/14:30)\n🐕 Buddy工作犬(13:30)\n🐧 企鵝餵食(11:00/14:00 需整理券)\n🐪 騎馬/駱駝(11:00/14:00)', nav: 'Kobe Animal Kingdom', lat: 34.6621, lng: 135.2215 },
+                    { time: '14:45~15:30', type: 'hotel', icon: '🚆', title: '前往三宮／元町', note: '—', nav: 'Motomachi Station', lat: 34.6888, lng: 135.1865 },
+                    { time: '15:30~16:30', type: 'shopping', icon: '🛍️', title: '元町商店街', note: '約 1 小時', nav: 'Motomachi Shopping Street', lat: 34.6888, lng: 135.1865 },
+                    { time: '16:30~17:00', type: 'hotel', icon: '🚶', title: '返回三宮', note: '—', nav: 'Sannomiya Station', lat: 34.6940, lng: 135.1950 },
+                    { 
+                        time: '17:00~18:30', 
+                        type: 'food', 
+                        icon: '🥩', 
+                        title: '神戶牛排 Steakland ⭐ 主要晚餐', 
+                        note: '神戶牛鐵板燒 (Tabelog 3.48)', 
+                        nav: 'Steakland Kobe',
+                        lat: 34.6938,
+                        lng: 135.1920
+                    },
+                    { time: '約19:00~20:00', type: 'hotel', icon: '🚆', title: '三宮 → 大阪', note: '提早返回', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '20:00後', type: 'misc', icon: '☁️', title: '難波雲海', note: '🟡 彈性行程', nav: 'Namba Parks', lat: 34.6620, lng: 135.5020 },
+                    { time: '晚上', type: 'hotel', icon: '🏨', title: '返回 OMO7 大阪', note: '最後一晚', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 }
+                ]
+            },
+            {
+                date: '10/24',
+                week: '六',
+                title: '10/24（六）｜大阪 → 關西機場 → 桃園',
+                subtitle: 'OMO7 退房 ➔ 關西機場 ➔ 搭機返台 (兩人各25kg)',
+                badge: '回程賦歸',
+                events: [
+                    { time: '07:30~08:00', type: 'hotel', icon: '🏨', title: 'OMO7 大阪退房', note: '整理行李', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '約08:00', type: 'hotel', icon: '🚆', title: '前往關西機場', note: '搭乘南海電鐵或HARUKA', nav: 'Kansai International Airport', lat: 34.4342, lng: 135.2447 },
+                    { time: '約09:20', type: 'hotel', icon: '🛫', title: '抵達關西機場 T1', note: '預留約 3 小時', nav: 'Kansai Airport Terminal 1', lat: 34.4342, lng: 135.2447 },
+                    { time: '12:20', type: 'hotel', icon: '✈', title: '台灣虎航 IT711 關西 → 桃園', note: '14:15 抵達桃園 T1', nav: 'Kansai Airport Terminal 1', lat: 34.4342, lng: 135.2447 }
+                ]
+            }
+        ];
+
+        let todoList = JSON.parse(localStorage.getItem('kansai_master_todos')) || [
+            { id: 1, title: '🎨 TeamLab Biovortex Kyoto 購票', desc: '10/17 17:30 場次。', completed: false, customTime: '10/17 17:30' },
+            { id: 2, title: '🚆 關西機場到京都車票購票', desc: '10/17 抵達後搭乘，建議購買HARUKA或ICOCA。', completed: false, customTime: '10/17 IT710抵達後' },
+            { id: 3, title: '🥩 モリタ屋 JR京都伊勢丹店訂位', desc: '10/18 約 18:00。', completed: false, customTime: '10/18 18:00' },
+            { id: 4, title: '🍵 三星園抹茶體驗預約', desc: '10/19 09:30 優先場次。', completed: false, customTime: '10/19 09:30' },
+            { id: 5, title: '🍜 にし家 Grand Front大阪店訂位', desc: '10/21 11:45～13:00。', completed: false, customTime: '10/21 11:45' },
+            { id: 6, title: '🐷 とんかつ 康四郎訂位', desc: '10/21 18:30 晚餐。', completed: false, customTime: '10/21 18:30' },
+            { id: 7, title: '🦀 丸花 心齋橋訂位', desc: '10/22 19:00～21:00 晚餐。', completed: false, customTime: '10/22 19:00' },
+            { id: 8, title: '🥩 Steakland 訂位', desc: '10/23 約 17:00 晚餐。', completed: false, customTime: '10/23 17:00' },
+            { id: 9, title: '🚆 大阪到關西機場車票購票', desc: '10/24 回程搭乘。', completed: false, customTime: '10/24 早晨回程' },
+            { id: 10, title: '📱 eSIM卡購買', desc: '出發前於網路購買並安裝設定。', completed: false, customTime: '出發前3天' },
+            { id: 11, title: '🇯🇵 Visit Japan Web 填寫', desc: '入境審查與海關申報 QR Code 填寫。', completed: false, customTime: '出發前1天' }
+        ];
+
+        let customDayNotes = JSON.parse(localStorage.getItem('kansai_master_custom_notes')) || {};
+
+        let activePageIndex = 'itinerary';
+        let activeDayIndex = 0;
+        let currentCategoryFilter = 'all';
+        let jpyExchangeRate = 0.215;
+        let expensesList = JSON.parse(localStorage.getItem('kansai_master_expenses')) || [];
+        let currentExpenseCategoryFilter = 'all';
+        let embeddedMap = null;
+        let fullScreenMap = null;
+        let mapMarkersLayer = null;
+        let fullScreenMarkersLayer = null;
+        let selectedBase64Image = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDateTabs();
+            renderTimeline();
+            renderCustomDayNotes();
+            renderTodoList();
+            renderExpenseList();
+            updateExpenseSummary();
+            setupFormListeners();
+            initEmbeddedMap();
+            setupAIChat();
+        });
+
+        function switchPage(pageId) {
+            activePageIndex = pageId;
+            document.querySelectorAll('.page-view').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active'));
+            const activeNavBtn = document.getElementById(`nav-${pageId}`);
+            if (activeNavBtn) activeNavBtn.classList.add('nav-active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (pageId === 'itinerary') {
+                setTimeout(() => {
+                    if (embeddedMap) embeddedMap.invalidateSize();
+                }, 200);
+            }
+        }
+
+        function getMorandiColorByType(type) {
+            switch(type) {
+                case 'spot': return '#6B7A70';      /* 景點 */
+                case 'food': return '#B46A55';      /* 美食 */
+                case 'hotel':
+                case 'transit': return '#7D8B96';   /* 住宿/交通 */
+                case 'shopping': return '#8E735B';  /* 🛍️ 購物 */
+                case 'misc': return '#5E7387';      /* ✨ 其他 */
+                default: return '#6B7A70';
+            }
+        }
+
+        function initEmbeddedMap() {
+            if (embeddedMap) return;
+            embeddedMap = L.map('day-leaflet-map', { zoomControl: false }).setView([34.9858, 135.7588], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(embeddedMap);
+
+            mapMarkersLayer = L.layerGroup().addTo(embeddedMap);
+            updateEmbeddedMapMarkers();
+        }
+
+        function updateEmbeddedMapMarkers() {
+            if (!embeddedMap || !mapMarkersLayer) return;
+            mapMarkersLayer.clearLayers();
+
+            const day = itineraryData[activeDayIndex];
+            const validEvents = day.events.filter(e => e.lat && e.lng);
+            const bounds = [];
+
+            validEvents.forEach((event, idx) => {
+                const latLng = [event.lat, event.lng];
+                bounds.push(latLng);
+                const pinColor = getMorandiColorByType(event.type);
+
+                const customIcon = L.divIcon({
+                    className: 'custom-map-pin',
+                    html: `<div style="background-color: ${pinColor}; color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">${idx + 1}</div>`,
+                    iconSize: [26, 26],
+                    iconAnchor: [13, 13]
+                });
+
+                const marker = L.marker(latLng, { icon: customIcon });
+                const mapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.nav || event.title)}`;
+                
+                marker.bindPopup(`
+                    <div style="font-family: 'Noto Sans TC', sans-serif; font-size: 11px; max-width: 180px;">
+                        <b style="font-size: 12px; color: #3E3D3A;">${event.icon} ${event.title}</b>
+                        <p style="margin: 4px 0; color: #8C867D;">${event.time} | ${event.note.substring(0, 45)}...</p>
+                        <a href="${mapSearchUrl}" target="_blank" style="color: #6B7A70; font-weight: bold; text-decoration: underline;">📍 Google Maps 導航</a>
+                    </div>
+                `);
+                mapMarkersLayer.addLayer(marker);
+            });
+
+            if (bounds.length > 0) {
+                embeddedMap.fitBounds(bounds, { padding: [30, 30], maxZoom: 14 });
+            }
+        }
+
+        function openFullMapModal(showAllDays = false) {
+            document.getElementById('map-modal').classList.remove('hidden');
+            setTimeout(() => {
+                if (!fullScreenMap) {
+                    fullScreenMap = L.map('fullscreen-leaflet-map').setView([34.7, 135.5], 10);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap'
+                    }).addTo(fullScreenMap);
+                    fullScreenMarkersLayer = L.layerGroup().addTo(fullScreenMap);
+                }
+                fullScreenMap.invalidateSize();
+                updateFullScreenMarkers(showAllDays);
+            }, 100);
+        }
+
+        function closeFullMapModal() {
+            document.getElementById('map-modal').classList.add('hidden');
+        }
+
+        function updateFullScreenMarkers(showAllDays) {
+            if (!fullScreenMap || !fullScreenMarkersLayer) return;
+            fullScreenMarkersLayer.clearLayers();
+
+            const eventsToPlot = showAllDays ? itineraryData.flatMap((d, dIdx) => d.events.map(e => ({ ...e, dayStr: d.date }))) : itineraryData[activeDayIndex].events;
+            const validEvents = eventsToPlot.filter(e => e.lat && e.lng);
+            const bounds = [];
+
+            validEvents.forEach((event, idx) => {
+                const latLng = [event.lat, event.lng];
+                bounds.push(latLng);
+                const pinColor = getMorandiColorByType(event.type);
+
+                const customIcon = L.divIcon({
+                    className: 'custom-map-pin',
+                    html: `<div style="background-color: ${pinColor}; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">${idx + 1}</div>`,
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                });
+
+                const marker = L.marker(latLng, { icon: customIcon });
+                const mapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.nav || event.title)}`;
+
+                marker.bindPopup(`
+                    <div style="font-family: 'Noto Sans TC', sans-serif; font-size: 12px; max-width: 200px;">
+                        ${showAllDays ? `<span style="background: #F5F2EB; padding: 2px 6px; border-radius: 4px; font-size: 10px; color: #6B7A70; font-weight: bold;">${event.dayStr}</span>` : ''}
+                        <b style="font-size: 13px; color: #3E3D3A; display: block; margin-top: 2px;">${event.icon} ${event.title}</b>
+                        <p style="margin: 4px 0; color: #8C867D;">${event.time} | ${event.note.substring(0, 60)}...</p>
+                        <a href="${mapSearchUrl}" target="_blank" style="color: #6B7A70; font-weight: bold; text-decoration: underline; display: inline-block; margin-top: 4px;">📍 開啟 Google Maps 導航</a>
+                    </div>
+                `);
+                fullScreenMarkersLayer.addLayer(marker);
+            });
+
+            if (bounds.length > 0) {
+                fullScreenMap.fitBounds(bounds, { padding: [50, 50], maxZoom: 13 });
+            }
+        }
+
+        function renderDateTabs() {
+            const container = document.getElementById('date-tabs');
+            container.innerHTML = itineraryData.map((d, index) => `
+                <button onclick="switchDay(${index})" 
+                        class="day-tab-btn flex-shrink-0 px-3.5 py-1.5 rounded-xl border text-xs font-semibold transition-all flex flex-col items-center whitespace-nowrap ${index === activeDayIndex ? 'tab-active' : 'bg-wabi-card text-wabi-text border-wabi-border hover:border-wabi-accent'}">
+                    <span class="whitespace-nowrap">${d.date} (${d.week})</span>
+                    <span class="text-[9px] opacity-80 font-normal whitespace-nowrap">Day ${index + 1}</span>
+                </button>
+            `).join('');
+        }
+
+        function switchDay(dayIndex) {
+            activeDayIndex = dayIndex;
+            renderDateTabs();
+            renderTimeline();
+            renderCustomDayNotes();
+            updateEmbeddedMapMarkers();
+        }
+
+        function setCategoryFilter(category, btnElement) {
+            currentCategoryFilter = category;
+            document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('bg-wabi-card', 'text-wabi-text');
+            });
+            if (btnElement) {
+                btnElement.classList.add('tab-active');
+                btnElement.classList.remove('bg-wabi-card', 'text-wabi-text');
+            }
+            renderTimeline();
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timeline-container');
+            const day = itineraryData[activeDayIndex];
+            
+            document.getElementById('day-title').textContent = day.title;
+            document.getElementById('day-subtitle').textContent = day.subtitle;
+            document.getElementById('day-badge').textContent = day.badge;
+
+            const filteredEvents = day.events.filter(e => {
+                if (currentCategoryFilter === 'all') return true;
+                return e.type === currentCategoryFilter;
+            });
+
+            if (filteredEvents.length === 0) {
+                container.innerHTML = `<div class="bg-wabi-card p-6 rounded-2xl border border-wabi-border text-center text-wabi-muted text-xs">此分類無行程項目</div>`;
+                return;
+            }
+
+            container.innerHTML = filteredEvents.map((event, idx) => {
+                const pinColor = getMorandiColorByType(event.type);
+                const mapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.nav || event.title)}`;
+                
+                return `
+                    <div class="bg-wabi-card p-3.5 rounded-2xl border border-wabi-border shadow-xs flex items-start gap-3 relative overflow-hidden">
+                        <div class="absolute left-0 inset-y-0 w-1.5" style="background-color: ${pinColor};"></div>
+                        <div class="w-8 h-8 rounded-xl bg-wabi-bg border border-wabi-border flex items-center justify-center shrink-0 text-sm shadow-2xs">
+                            ${event.icon}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="text-[10px] font-mono font-bold text-wabi-accent px-2 py-0.5 bg-wabi-bg rounded-lg border border-wabi-border whitespace-nowrap">${event.time}</span>
+                                <a href="${mapSearchUrl}" target="_blank" class="text-[10px] text-wabi-accent font-bold hover:underline flex items-center gap-1 shrink-0 whitespace-nowrap">
+                                    <i class="fa-solid fa-location-dot"></i> 導航
+                                </a>
+                            </div>
+                            <h4 class="font-bold text-wabi-text text-sm mt-1 leading-snug">${event.title}</h4>
+                            <p class="text-xs text-wabi-muted mt-1 leading-relaxed whitespace-pre-line">${event.note}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderCustomDayNotes() {
+            const container = document.getElementById('day-custom-notes-list');
+            const dayKey = itineraryData[activeDayIndex].date;
+            const notes = customDayNotes[dayKey] || [];
+
+            if (notes.length === 0) {
+                container.innerHTML = `<p class="text-xs text-wabi-muted text-center py-2">尚無自訂行程或備註，您可於下方自行新增</p>`;
+                return;
+            }
+
+            container.innerHTML = notes.map((note, idx) => {
+                const mapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(note.title)}`;
+                return `
+                    <div class="bg-wabi-bg p-3 rounded-xl border border-wabi-border/60 flex items-start justify-between gap-2 relative">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-mono font-bold text-wabi-accent bg-wabi-card px-2 py-0.5 rounded border border-wabi-border">${note.time}</span>
+                                <span class="font-bold text-wabi-text text-xs">${note.title}</span>
+                            </div>
+                            ${note.desc ? `<p class="text-[11px] text-wabi-muted mt-1 leading-relaxed whitespace-pre-line">${note.desc}</p>` : ''}
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <a href="${mapSearchUrl}" target="_blank" title="Google 導航" class="text-[10px] bg-wabi-card text-wabi-accent p-1.5 rounded border border-wabi-border hover:border-wabi-accent">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </a>
+                            <button onclick="deleteCustomDayNote('${dayKey}', ${idx})" title="刪除" class="text-[10px] bg-wabi-card text-red-500 p-1.5 rounded border border-wabi-border hover:bg-red-50">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addCustomDayNote(e) {
+            e.preventDefault();
+            const time = document.getElementById('custom-note-time').value.trim();
+            const title = document.getElementById('custom-note-title').value.trim();
+            const desc = document.getElementById('custom-note-desc').value.trim();
+            if (!time || !title) return;
+
+            const dayKey = itineraryData[activeDayIndex].date;
+            if (!customDayNotes[dayKey]) {
+                customDayNotes[dayKey] = [];
+            }
+
+            customDayNotes[dayKey].push({ time, title, desc });
+            localStorage.setItem('kansai_master_custom_notes', JSON.stringify(customDayNotes));
+
+            document.getElementById('custom-note-time').value = '';
+            document.getElementById('custom-note-title').value = '';
+            document.getElementById('custom-note-desc').value = '';
+
+            renderCustomDayNotes();
+        }
+
+        function deleteCustomDayNote(dayKey, index) {
+            if (customDayNotes[dayKey]) {
+                customDayNotes[dayKey].splice(index, 1);
+                localStorage.setItem('kansai_master_custom_notes', JSON.stringify(customDayNotes));
+                renderCustomDayNotes();
+            }
+        }
+
+        function renderTodoList() {
+            const container = document.getElementById('todo-items-container');
+            const completedCount = todoList.filter(t => t.completed).length;
+            document.getElementById('todo-progress-badge').textContent = `完成 ${completedCount} / ${todoList.length}`;
+
+            container.innerHTML = todoList.map(item => `
+                <div class="p-3 bg-wabi-bg rounded-xl border ${item.completed ? 'border-[#C1CDC5] bg-[#EAEFEA]/40 opacity-80' : 'border-wabi-border/50'} transition-all space-y-2">
+                    <div class="flex items-start justify-between gap-2">
+                        <label class="flex items-start gap-2.5 cursor-pointer flex-1 min-w-0">
+                            <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTodo(${item.id})"
+                                   class="mt-0.5 w-4 h-4 accent-wabi-accent rounded cursor-pointer shrink-0">
+                            <div class="min-w-0 flex-1">
+                                <div class="font-bold text-wabi-text ${item.completed ? 'line-through text-wabi-muted' : ''}">${item.title}</div>
+                                <div class="text-wabi-muted text-[11px] mt-0.5 leading-relaxed">${item.desc}</div>
+                            </div>
+                        </label>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="text-[10px] px-2 py-0.5 rounded font-bold whitespace-nowrap ${item.completed ? 'bg-[#EAEFEA] text-[#55635C]' : 'bg-[#F4EFE6] text-[#7A6B52]'}">
+                                ${item.completed ? '✓ 已完成' : '◻︎ 待完成'}
+                            </span>
+                            <button onclick="deleteTodo(${item.id})" title="刪除" class="text-wabi-muted hover:text-red-500 p-1">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-1.5 border-t border-wabi-border/40 gap-2">
+                        <span class="text-[10px] text-wabi-accent font-bold whitespace-nowrap"><i class="fa-solid fa-clock"></i> 預約時間備註：</span>
+                        <input type="text" value="${item.customTime || ''}" placeholder="點此輸入確定時間" 
+                               onchange="updateTodoTime(${item.id}, this.value)"
+                               class="flex-1 max-w-[200px] bg-wabi-card border border-wabi-border rounded-lg px-2 py-1 text-[11px] text-wabi-text outline-none focus:border-wabi-accent font-sans">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addCustomTodo(e) {
+            e.preventDefault();
+            const title = document.getElementById('new-todo-title').value.trim();
+            const desc = document.getElementById('new-todo-desc').value.trim();
+            const customTime = document.getElementById('new-todo-time').value.trim();
+            if (!title) return;
+
+            const newItem = {
+                id: Date.now(),
+                title,
+                desc: desc || '自行新增之待辦事項',
+                completed: false,
+                customTime: customTime || '待安排'
+            };
+
+            todoList.push(newItem);
+            localStorage.setItem('kansai_master_todos', JSON.stringify(todoList));
+
+            document.getElementById('new-todo-title').value = '';
+            document.getElementById('new-todo-desc').value = '';
+            document.getElementById('new-todo-time').value = '';
+
+            renderTodoList();
+        }
+
+        function toggleTodo(id) {
+            const item = todoList.find(t => t.id === id);
+            if (item) {
+                item.completed = !item.completed;
+                localStorage.setItem('kansai_master_todos', JSON.stringify(todoList));
+                renderTodoList();
+            }
+        }
+
+        function deleteTodo(id) {
+            todoList = todoList.filter(t => t.id !== id);
+            localStorage.setItem('kansai_master_todos', JSON.stringify(todoList));
+            renderTodoList();
+        }
+
+        function updateTodoTime(id, timeVal) {
+            const item = todoList.find(t => t.id === id);
+            if (item) {
+                item.customTime = timeVal;
+                localStorage.setItem('kansai_master_todos', JSON.stringify(todoList));
+            }
+        }
+
+        function setExpenseFilter(cat, btnElement) {
+            currentExpenseCategoryFilter = cat;
+            document.querySelectorAll('.exp-filter-btn').forEach(b => {
+                b.classList.remove('tab-active');
+                b.classList.add('bg-wabi-card', 'text-wabi-text');
+            });
+            if (btnElement) {
+                btnElement.classList.add('tab-active');
+                btnElement.classList.remove('bg-wabi-card', 'text-wabi-text');
+            }
+            renderExpenseList();
+        }
+
+        function renderExpenseList() {
+            const container = document.getElementById('expense-list');
+            const filtered = expensesList.filter(e => currentExpenseCategoryFilter === 'all' || e.category === currentExpenseCategoryFilter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="bg-wabi-card p-6 rounded-2xl border border-wabi-border text-center text-wabi-muted text-xs">目前尚無消費紀錄</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map((item, idx) => `
+                <div class="bg-wabi-card p-3.5 rounded-2xl border border-wabi-border shadow-xs flex items-center justify-between gap-2">
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] bg-wabi-bg text-wabi-accent px-2 py-0.5 rounded font-bold border border-wabi-border">${item.category}</span>
+                            <span class="font-bold text-wabi-text text-xs truncate">${item.name}</span>
+                        </div>
+                        <div class="text-[10px] text-wabi-muted mt-1 flex items-center gap-2">
+                            <span>支付: ${item.payment}</span>
+                            ${item.note ? `<span>• 備註: ${item.note}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="font-mono font-bold text-xs text-wabi-text">${item.payment === '台幣' ? 'NT$ ' + item.amount : '¥ ' + item.amount.toLocaleString()}</div>
+                        <div class="text-[10px] font-mono text-wabi-muted">${item.payment === '台幣' ? '折合 ¥' + Math.round(item.amount / jpyExchangeRate) : '約 NT$ ' + Math.round(item.amount * jpyExchangeRate)}</div>
+                    </div>
+                    <button onclick="deleteExpense(${item.id})" class="text-wabi-muted hover:text-red-500 p-1">
+                        <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function updateExpenseSummary() {
+            let totalJpy = 0;
+            let totalTwd = 0;
+            const catTotals = { '食': 0, '購物': 0, '伴手禮': 0, '代購': 0, '住': 0, '行': 0, '其他': 0 };
+
+            expensesList.forEach(e => {
+                const amt = Number(e.amount) || 0;
+                if (e.payment === '台幣') {
+                    totalTwd += amt;
+                    totalJpy += amt / jpyExchangeRate;
+                } else {
+                    totalJpy += amt;
+                    totalTwd += amt * jpyExchangeRate;
+                }
+                if (catTotals[e.category] !== undefined) {
+                    catTotals[e.category] += amt;
+                } else {
+                    catTotals['其他'] += amt;
+                }
+            });
+
+            document.getElementById('total-jpy').textContent = '¥ ' + Math.round(totalJpy).toLocaleString();
+            document.getElementById('total-twd').textContent = 'NT$ ' + Math.round(totalTwd).toLocaleString();
+
+            const catContainer = document.getElementById('expense-category-totals');
+            catContainer.innerHTML = Object.entries(catTotals).map(([cat, val]) => `
+                <div class="bg-wabi-bg p-2 rounded-xl border border-wabi-border/60 text-center">
+                    <span class="text-wabi-muted font-medium block">${cat}</span>
+                    <span class="font-mono font-bold text-wabi-text mt-0.5 block truncate">${val > 0 ? (cat === '食' || cat === '購物' || cat === '伴手禮' || cat === '代購' || cat === '住' || cat === '行' ? '¥' : '¥') + Math.round(val).toLocaleString() : '0'}</span>
+                </div>
+            `).join('');
+        }
+
+        function setupFormListeners() {
+            document.getElementById('expense-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('exp-name').value.trim();
+                const amount = parseFloat(document.getElementById('exp-amount').value);
+                const payment = document.getElementById('exp-payment').value;
+                const category = document.getElementById('exp-category').value;
+                const note = document.getElementById('exp-note').value.trim();
+
+                if (!name || isNaN(amount)) return;
+
+                const newExp = {
+                    id: Date.now(),
+                    name,
+                    amount,
+                    payment,
+                    category,
+                    note,
+                    date: new Date().toLocaleDateString()
+                };
+
+                expensesList.push(newExp);
+                localStorage.setItem('kansai_master_expenses', JSON.stringify(expensesList));
+
+                document.getElementById('exp-name').value = '';
+                document.getElementById('exp-amount').value = '';
+                document.getElementById('exp-note').value = '';
+
+                renderExpenseList();
+                updateExpenseSummary();
+            });
+        }
+
+        function deleteExpense(id) {
+            expensesList = expensesList.filter(e => e.id !== id);
+            localStorage.setItem('kansai_master_expenses', JSON.stringify(expensesList));
+            renderExpenseList();
+            updateExpenseSummary();
+        }
+
+        // Export expenses to Excel (CSV with UTF-8 BOM)
+        function exportExpensesToExcel() {
+            if (expensesList.length === 0) {
+                alert('目前尚無任何記帳資料可供匯出！');
+                return;
+            }
+
+            let csvContent = "\uFEFF"; // UTF-8 BOM for Excel compatibility with Chinese characters
+            csvContent += "項次,消費品項,金額,支付方式,類別,備註,記錄日期\n";
+
+            expensesList.forEach((item, index) => {
+                const row = [
+                    index + 1,
+                    `"${(item.name || '').replace(/"/g, '""')}"`,
+                    item.amount,
+                    `"${item.payment}"`,
+                    `"${item.category}"`,
+                    `"${(item.note || '').replace(/"/g, '""')}"`,
+                    `"${item.date || ''}"`
+                ];
+                csvContent += row.join(",") + "\n";
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `京阪神旅遊記帳_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function triggerPhotoUpload() {
+            document.getElementById('ai-photo-input').click();
+        }
+
+        function onPhotoSelected(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedBase64Image = e.target.result;
+                document.getElementById('ai-image-preview').src = selectedBase64Image;
+                document.getElementById('ai-image-preview-title').textContent = file.name;
+                document.getElementById('ai-image-preview-container').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearSelectedImage() {
+            selectedBase64Image = null;
+            document.getElementById('ai-image-preview-container').classList.add('hidden');
+            document.getElementById('ai-photo-input').value = '';
+        }
+
+        function sendQuickPrompt(promptText) {
+            switchPage('ai');
+            document.getElementById('ai-user-input').value = promptText;
+            document.getElementById('ai-chat-form').dispatchEvent(new Event('submit'));
+        }
+
+        function setupAIChat() {
+            document.getElementById('ai-chat-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const inputEl = document.getElementById('ai-user-input');
+                const userText = inputEl.value.trim();
+                if (!userText && !selectedBase64Image) return;
+
+                const chatWindow = document.getElementById('ai-chat-window');
+
+                // Append user message
+                let userHtml = `
+                    <div class="flex items-start justify-end gap-2.5">
+                        <div class="bg-wabi-accent text-white p-3 rounded-2xl rounded-tr-xs max-w-[85%] text-wabi-text leading-relaxed">
+                `;
+                if (selectedBase64Image) {
+                    userHtml += `<img src="${selectedBase64Image}" class="w-32 h-32 object-cover rounded-lg mb-2 border border-white/30" alt="上傳圖片">`;
+                }
+                userHtml += `<span>${userText}</span></div>
+                        <div class="w-7 h-7 rounded-full bg-[#7D8B96] text-white flex items-center justify-center shrink-0 text-xs shadow-xs">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                    </div>
+                `;
+                chatWindow.insertAdjacentHTML('beforeend', userHtml);
+                inputEl.value = '';
+                const currentImg = selectedBase64Image;
+                clearSelectedImage();
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                // Simulate AI response
+                const loadingId = 'ai-loading-' + Date.now();
+                chatWindow.insertAdjacentHTML('beforeend', `
+                    <div id="${loadingId}" class="flex items-start gap-2.5">
+                        <div class="w-7 h-7 rounded-full bg-wabi-accent text-white flex items-center justify-center shrink-0 text-xs shadow-xs">
+                            <i class="fa-solid fa-sparkles"></i>
+                        </div>
+                        <div class="bg-wabi-bg p-3 rounded-2xl rounded-tl-xs border border-wabi-border/60 text-wabi-muted flex items-center gap-2">
+                            <i class="fa-solid fa-circle-notch fa-spin text-wabi-accent"></i> 正在聯網搜尋與深度解析中...
+                        </div>
+                    </div>
+                `);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                setTimeout(() => {
+                    const loadingEl = document.getElementById(loadingId);
+                    if (loadingEl) loadingEl.remove();
+
+                    let replyText = `收到您的詢問！針對「${userText}」，根據您的 2026 京阪神 MASTER 行程資料：`;
+                    if (userText.includes('神戶動物王國') || userText.includes('表演')) {
+                        replyText = `🐾 <b>神戶動物王國導遊貼心提醒：</b><br>1. <b>Wings 飛鳥飛行秀</b> 通常於 11:30 與 14:30 在戶外舉辦。<br>2. <b>企鵝餵食體驗</b> (11:00 / 14:00) 需現場排隊領取整理券。<br>⚠️ 入園時請務必立即掃描入口處 QR Code 確認當天最新時刻表喔！`;
+                    } else if (userText.includes('梅田') || userText.includes('午餐')) {
+                        replyText = `🍜 <b>10/21 梅田午餐推薦比較：</b><br>• <b>主要餐廳：にし家 Grand Front大阪店</b> (Tabelog 3.52，烏龍麵與壽喜燒極受好評，交通便利位於 Grand Front 南館 7F)。<br>• <b>備選：うどん兎麦</b> 或 <b>お好み焼ききじ</b>，排隊人潮較多建議提早前往！`;
+                    } else if (currentImg) {
+                        replyText = `📸 <b>圖片視覺解析完成：</b><br>我已為您辨識此張照片的內容！若這是日本菜單或收據，您可以直接將金額複製並手動登錄至「隨手記帳」頁面中進行總計！`;
+                    } else {
+                        replyText = `👍 沒問題！這筆關於「${userText}」的需求已記錄在案。在您的 8 天旅程中，OMO7 大阪住宿與各項門票預約都已妥善安排，祝您旅途愉快！`;
+                    }
+
+                    chatWindow.insertAdjacentHTML('beforeend', `
+                        <div class="flex items-start gap-2.5">
+                            <div class="w-7 h-7 rounded-full bg-wabi-accent text-white flex items-center justify-center shrink-0 text-xs shadow-xs">
+                                <i class="fa-solid fa-sparkles"></i>
+                            </div>
+                            <div class="bg-wabi-bg p-3 rounded-2xl rounded-tl-xs border border-wabi-border/60 max-w-[85%] text-wabi-text leading-relaxed">
+                                ${replyText}
+                            </div>
+                        </div>
+                    `);
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }, 1200);
+            });
+        }
+    </script>
+</body>
+</html>
