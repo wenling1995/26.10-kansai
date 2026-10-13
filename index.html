@@ -1204,13 +1204,30 @@
             localStorage.setItem(NOTE_QUEUE_KEY, JSON.stringify(pendingNoteActions));
             localStorage.setItem(NOTE_TOMBSTONES_KEY, JSON.stringify(deletedNoteIds));
         }
+        // Google Sheets may auto-convert 10/17 to a Date object. Normalize only 2026 October dates.
+        function normalizeCloudDayKey(raw) {
+            const value = String(raw || '').trim();
+            let m = value.match(/^(?:2026[-/])?(10)[-/](1[7-9]|2[0-4])$/);
+            if (m) return '10/' + Number(m[2]);
+            m = value.match(/^(?:Sat|Sun|Mon|Tue|Wed|Thu|Fri)\s+Oct\s+(1[7-9]|2[0-4])\s+2026\b/i);
+            if (m) return '10/' + Number(m[1]);
+            m = value.match(/^2026-10-(1[7-9]|2[0-4])T/);
+            if (m) return '10/' + Number(m[1]);
+            // Other dates (including December) are intentionally NOT remapped.
+            return value;
+        }
+        function normalizeCloudTime(raw) {
+            const value = String(raw || '').trim();
+            const m = value.match(/^(?:Sat|Sun|Mon|Tue|Wed|Thu|Fri)\s+Dec\s+30\s+1899\s+(\d{1,2}):(\d{2})/i);
+            return m ? String(m[1]).padStart(2,'0') + m[2] : value;
+        }
         function cloudNoteMap(notes) {
             const map = new Map();
             Object.keys(notes || {}).forEach(day => {
                 if (!Array.isArray(notes[day])) return;
                 notes[day].forEach(n => {
-                    if (n && n.id) map.set(String(n.id), {dayKey: day, id: String(n.id),
-                        time: String(n.time || ''), title: String(n.title || ''), desc: String(n.desc || '')});
+                    if (n && n.id) map.set(String(n.id), {dayKey: normalizeCloudDayKey(day), id: String(n.id),
+                        time: normalizeCloudTime(n.time), title: String(n.title || ''), desc: String(n.desc || '')});
                 });
             });
             return map;
@@ -1299,8 +1316,8 @@
                         const a = pendingNoteActions[id];
                         const n = latest.get(id);
                         const ok = a.action === 'delete' ? removed.has(id) : !!n &&
-                            !removed.has(id) && String(n.dayKey) === String(a.dayKey) &&
-                            String(n.time) === String(a.time||'') &&
+                            !removed.has(id) && normalizeCloudDayKey(n.dayKey) === normalizeCloudDayKey(a.dayKey) &&
+                            normalizeCloudTime(n.time) === String(a.time||'') &&
                             String(n.title) === String(a.title||'') &&
                             String(n.desc) === String(a.desc||'');
                         if (ok) { delete pendingNoteActions[id]; delete deletedNoteIds[id]; }
