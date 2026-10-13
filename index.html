@@ -1190,78 +1190,78 @@
             }
         }
 
-        // 安全合併：雲端空白/延遲回應絕不刪除本機資料。
+        // v4: 雲端為已確認資料的權威來源；待送出的本機操作永不被覆蓋。
+        // 首次升級時僅遷移舊版未同步的本機備註一次，之後不再將已刪除的舊資料補傳。
         const NOTE_TOMBSTONES_KEY = 'kansai_master_note_deleted_v3';
+        const NOTE_MIGRATION_KEY = 'kansai_master_notes_cloud_migrated_v4';
         let deletedNoteIds = safeLoadJSON(NOTE_TOMBSTONES_KEY, {});
         let sharedSyncBusy = false;
         function noteStatus(message, failed) {
             const el = document.getElementById('note-cloud-status');
             if (el) { el.textContent = message; el.style.color = failed ? '#B46A55' : '#6B7A70'; }
         }
-        function cloudNoteMap(notes) {
-            const map = new Map();
-            Object.keys(notes || {}).forEach(day => {
-                if (!Array.isArray(notes[day])) return;
-                notes[day].forEach(n => { if (n && n.id) map.set(String(n.id), {dayKey:day, id:String(n.id), time:String(n.time || ''), title:String(n.title || ''), desc:String(n.desc || '')}); });
-            });
-            return map;
-        }
-        // Apps Script 的 ContentService 會轉址至 googleusercontent.com；跨來源 fetch 可能卡住。
-        // 使用 JSONP 讀取 shared 資料（後端必須支援 callback 參數），設置逾時防止無限顯示同步中。
-        function fetchCloudNotes() {
-            return new Promise((resolve, reject) => {
-                const callbackName = '__kansaiShared_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
-                const script = document.createElement('script');
-                let finished = false;
-                let timeoutId;
-                const cleanup = () => {
-                    if (finished) return;
-                    finished = true;
-                    clearTimeout(timeoutId);
-                    delete window[callbackName];
-                    script.remove();
-                };
-                window[callbackName] = data => {
-                    cleanup();
-                    if (!data || data.status !== 'success' || !data.notes || typeof data.notes !== 'object' || Array.isArray(data.notes)) {
-                        reject(new Error((data && data.message) || '雲端讀取格式錯誤，請部署新版 Apps Script'));
-                        return;
-                    }
-                    resolve(data.notes);
-                };
-                script.onerror = () => { cleanup(); reject(new Error('雲端讀取失敗，請檢查 Apps Script 部署權限')); };
-                timeoutId = setTimeout(() => { cleanup(); reject(new Error('雲端讀取逾時，請確認新版 Apps Script 已部署')); }, 12000);
-                script.src = GAS_WEB_APP_URL + '?resource=shared&callback=' + encodeURIComponent(callbackName) + '&t=' + Date.now();
-                document.head.appendChild(script);
-            });
-        }
-        async function sendNoteAction(action) {
-            await fetch(GAS_WEB_APP_URL, {
-                method:'POST', mode:'no-cors', redirect:'follow',
-                headers:{'Content-Type':'text/plain;charset=utf-8'},
-                body:JSON.stringify(Object.assign({resource:'shared'}, action))
-            });
-        }
         function persistPendingNotes() {
             localStorage.setItem(NOTE_QUEUE_KEY, JSON.stringify(pendingNoteActions));
             localStorage.setItem(NOTE_TOMBSTONES_KEY, JSON.stringify(deletedNoteIds));
         }
-        function mergeCloudNotes(remote) {
-            // 本機資料是安全底稿；同步只能增加或更新，不能因雲端缺項刪除。
-            const byId = new Map();
-            Object.keys(customDayNotes).forEach(day => (customDayNotes[day] || []).forEach(n => {
-                if (n && n.id && !deletedNoteIds[String(n.id)]) byId.set(String(n.id), {dayKey:day,id:String(n.id),time:String(n.time||''),title:String(n.title||''),desc:String(n.desc||'')});
-            }));
-            cloudNoteMap(remote).forEach((n,id) => {
-                if (!deletedNoteIds[id] && !pendingNoteActions[id]) byId.set(id,n);
+        function cloudNoteMap(notes) {
+            const map = new Map();
+            Object.keys(notes || {}).forEach(day => {
+                if (!Array.isArray(notes[day])) return;
+                notes[day].forEach(n => {
+                    if (n && n.id) map.set(String(n.id), {dayKey: day, id: String(n.id),
+                        time: String(n.time || ''), title: String(n.title || ''), desc: String(n.desc || '')});
+                });
             });
+            return map;
+        }
+        // 與已正常運作的記帳功能相同：使用 fetch + JSON，並檢查實際回應。
+        async function fetchCloudState() {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 15000);
+            try {
+                const response = await fetch(GAS_WEB_APP_URL + '?resource=shared&t=' + Date.now(), {
+                    method: 'GET', cache: 'no-store', redirect: 'follow', signal: controller.signal
+                });
+                if (!response.ok) throw new Error('讀取 HTTP ' + response.status);
+                const data = await response.json();
+                if (!data || data.status !== 'success' || !data.notes ||
+                    typeof data.notes !== 'object' || Array.isArray(data.notes)) {
+                    throw new Error('雲端回傳格式錯誤：' + (data && data.message || '請確認 Apps Script 部署'));
+                }
+                // 支援先前的 shared 後端，但 v4 才有刪除紀錄。
+                if (!Array.isArray(data.deletedIds)) data.deletedIds = [];
+                return data;
+            } finally { clearTimeout(timer); }
+        }
+        async function sendNoteAction(action) {
+            // 採用記帳相同的 POST 方式，取得真正的成功/失敗回應。
+            const response = await fetch(GAS_WEB_APP_URL, {
+                method: 'POST', redirect: 'follow',
+                body: JSON.stringify(Object.assign({resource:'shared'}, action))
+            });
+            if (!response.ok) throw new Error('寫入 HTTP ' + response.status);
+            const result = await response.json();
+            if (!result || result.status !== 'success') {
+                throw new Error('雲端寫入失敗：' + (result && result.message || '未知錯誤'));
+            }
+            return result;
+        }
+        function applyCloudState(state) {
+            const deleted = new Set(state.deletedIds.map(String));
+            const byId = cloudNoteMap(state.notes);
+            // 只有未完成的本機操作可覆蓋雲端快照。
             Object.keys(pendingNoteActions).forEach(id => {
                 const a = pendingNoteActions[id];
                 if (a.action === 'delete') byId.delete(id);
-                else if (a.action === 'upsert') byId.set(id,{dayKey:a.dayKey,id:id,time:String(a.time||''),title:String(a.title||''),desc:String(a.desc||'')});
+                if (a.action === 'upsert' && !deleted.has(id)) {
+                    byId.set(id, {dayKey:String(a.dayKey),id:id,time:String(a.time||''),
+                        title:String(a.title||''),desc:String(a.desc||'')});
+                }
             });
             const merged = {};
             byId.forEach(n => {
+                if (deleted.has(n.id)) return;
                 if (!merged[n.dayKey]) merged[n.dayKey] = [];
                 merged[n.dayKey].push({id:n.id,time:n.time,title:n.title,desc:n.desc});
             });
@@ -1274,40 +1274,45 @@
             sharedSyncBusy = true;
             noteStatus('正在同步行程備註…', false);
             try {
-                let remote = await fetchCloudNotes();
-                let cloud = cloudNoteMap(remote);
-                // 先將雲端內容安全合併進本機；絕不整份覆蓋。
-                mergeCloudNotes(remote);
-                // 本機既有項目如雲端缺少，排隊補傳。
-                Object.keys(customDayNotes).forEach(day => (customDayNotes[day] || []).forEach(n => {
-                    const id = String(n.id || '');
-                    if (id && !cloud.has(id) && !pendingNoteActions[id] && !deletedNoteIds[id]) {
-                        queueNoteAction({type:'note',action:'upsert',id:id,dayKey:day,time:n.time,title:n.title,desc:n.desc});
-                    }
-                }));
-                const actions = Object.values(pendingNoteActions);
-                for (const action of actions) await sendNoteAction(action);
-                if (actions.length) {
-                    remote = await fetchCloudNotes();
-                    cloud = cloudNoteMap(remote);
+                let state = await fetchCloudState();
+                const remote = cloudNoteMap(state.notes);
+                const deleted = new Set(state.deletedIds.map(String));
+                // 升級舊版本時，只將尚未在雲端的本機項目遷移一次。
+                if (!localStorage.getItem(NOTE_MIGRATION_KEY)) {
+                    Object.keys(customDayNotes).forEach(day => (customDayNotes[day] || []).forEach(n => {
+                        const id = String(n.id || '');
+                        if (id && !remote.has(id) && !deleted.has(id) && !deletedNoteIds[id] && !pendingNoteActions[id]) {
+                            queueNoteAction({type:'note',action:'upsert',id:id,dayKey:day,
+                                time:n.time,title:n.title,desc:n.desc});
+                        }
+                    }));
+                    localStorage.setItem(NOTE_MIGRATION_KEY, '1');
+                }
+                // 先套用已確認的雲端資料及尚未完成的本機操作。
+                applyCloudState(state);
+                for (const action of Object.values(pendingNoteActions)) await sendNoteAction(action);
+                if (Object.keys(pendingNoteActions).length) {
+                    state = await fetchCloudState();
+                    const latest = cloudNoteMap(state.notes);
+                    const removed = new Set(state.deletedIds.map(String));
                     Object.keys(pendingNoteActions).forEach(id => {
                         const a = pendingNoteActions[id];
-                        const item = cloud.get(id);
-                        const verified = a.action === 'delete' ? !item : !!item &&
-                            String(item.dayKey) === String(a.dayKey) &&
-                            String(item.time) === String(a.time || '') &&
-                            String(item.title) === String(a.title || '') &&
-                            String(item.desc) === String(a.desc || '');
-                        if (verified) delete pendingNoteActions[id];
+                        const n = latest.get(id);
+                        const ok = a.action === 'delete' ? removed.has(id) : !!n &&
+                            !removed.has(id) && String(n.dayKey) === String(a.dayKey) &&
+                            String(n.time) === String(a.time||'') &&
+                            String(n.title) === String(a.title||'') &&
+                            String(n.desc) === String(a.desc||'');
+                        if (ok) { delete pendingNoteActions[id]; delete deletedNoteIds[id]; }
                     });
                     persistPendingNotes();
-                    mergeCloudNotes(remote);
+                    applyCloudState(state);
                 }
                 const count = Object.keys(pendingNoteActions).length;
                 noteStatus(count ? '本機已保存・' + count + ' 筆待雲端確認' : '✓ 已同步至雲端', !!count);
             } catch (err) {
-                console.warn('雲端同步失敗，保留本機所有備註',err);
-                noteStatus('本機已保存・雲端連線失敗', true);
+                console.warn('行程備註同步失敗；未完成操作保留本機', err);
+                noteStatus('本機已保存・' + err.message, true);
             } finally { sharedSyncBusy = false; }
         }
 
