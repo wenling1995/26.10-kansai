@@ -87,7 +87,7 @@
             <h1 class="text-lg font-bold wabi-title text-wabi-text tracking-wide whitespace-nowrap">京阪神 8天7夜</h1>
         </div>
         <div class="text-right shrink-0">
-            <span class="text-xs text-wabi-muted whitespace-nowrap">12/17 ～ 12/24</span>
+            <span class="text-xs text-wabi-muted whitespace-nowrap">10/17 ～ 10/24</span>
             <div class="flex items-center justify-end gap-1 text-[11px] text-wabi-accent font-medium mt-0.5 whitespace-nowrap" id="sync-status-indicator">
                 <i class="fa-solid fa-cloud text-[10px]"></i> 雲端同步準備中
             </div>
@@ -115,7 +115,7 @@
 
             <div id="day-header" class="bg-wabi-card p-4 rounded-2xl border border-wabi-border shadow-xs flex items-center justify-between gap-2 overflow-hidden">
                 <div class="min-w-0 flex-1">
-                    <h2 id="day-title" class="text-base font-bold wabi-title text-wabi-text truncate">12/17 (四)</h2>
+                    <h2 id="day-title" class="text-base font-bold wabi-title text-wabi-text truncate">10/17 (六)</h2>
                     <p id="day-subtitle" class="text-xs text-wabi-muted mt-0.5 truncate">桃園 → 京都＋TeamLab</p>
                 </div>
                 <span id="day-badge" class="px-3 py-1 bg-wabi-bg text-wabi-accent font-medium text-xs rounded-full border border-wabi-border whitespace-nowrap shrink-0">京都 Day 1</span>
@@ -548,98 +548,235 @@
 
         const itineraryData = [
             {
-                date: '12/17',
-                week: '四',
-                title: '12/17（四）｜桃園 → 京都＋TeamLab',
-                subtitle: '桃園 T1 ➔ 關西機場 T1 ➔ 京都 ➔ TeamLab',
+                date: '10/17',
+                week: '六',
+                title: '10/17（六）｜桃園 → 京都＋TeamLab',
+                subtitle: '桃園 T1 ➔ 關西機場 T1 ➔ 京都 ➔ Sanco Inn ➔ TeamLab',
                 badge: '京都 Day 1',
                 events: [
                     { time: '07:45', type: 'hotel', icon: '✈', title: '桃園 T1 → 關西機場 T1', note: '台灣虎航 IT710', nav: 'Kansai International Airport', lat: 34.4342, lng: 135.2447 },
                     { time: '11:30', type: 'hotel', icon: '🛬', title: '抵達關西機場 T1', note: '入境＋領行李', nav: 'Kansai Airport Terminal 1', lat: 34.4342, lng: 135.2447 },
                     { time: '約14:00~15:00', type: 'hotel', icon: '🚆', title: '抵達京都', note: '依入境及交通狀況', nav: 'Kyoto Station', lat: 34.9858, lng: 135.7588 },
-                    { time: '約17:00~17:30', type: 'spot', icon: '🎨', title: 'TeamLab Biovortex Kyoto', note: '🎫 精彩互動展覽', nav: 'Kyoto', lat: 34.9822, lng: 135.7593 }
+                    { time: '抵達後', type: 'hotel', icon: '🏨', title: 'Sanco Inn Kyoto Hachijoguchi Shikinoyu', note: '放行李／入住', nav: 'Sanco Inn Kyoto Hachijoguchi', lat: 34.9835, lng: 135.7575 },
+                    { 
+                        time: 'TeamLab前', 
+                        type: 'food', 
+                        icon: '🍜', 
+                        title: '晚餐拉麵/料理四選一', 
+                        note: '🟡 備選：\n1. 本家 第一旭 本店 (Tabelog 3.73)\n2. 麺や虎鉄 京都拉麵小路店\n3. 中村商店 京都拉麵小路店\n4. 田ごと 京都ポルタ店', 
+                        nav: 'Honke Daiichiasahi',
+                        lat: 34.9850,
+                        lng: 135.7580
+                    },
+                    { time: '約17:00~17:30', type: 'spot', icon: '🎨', title: 'TeamLab Biovortex Kyoto', note: '🎫 待購票', nav: '21-5 Higashikujo Higashiiwamotocho, Minami Ward, Kyoto', lat: 34.9822, lng: 135.7593 },
+                    { time: 'TeamLab後', type: 'food', icon: '🌙', title: '町衆料理 京もん 八条口店', note: '🟡 有餓再去 (居酒屋/京料理)', nav: 'Kyoto Station Hachijoguchi', lat: 34.9835, lng: 135.7575 }
                 ]
             },
             {
-                date: '12/18',
-                week: '五',
-                title: '12/18（五）｜清水寺＋東山＋祇園',
-                subtitle: '清水寺 ➔ 湯豆腐 ➔ 二三年坂 ➔ 祇園',
+                date: '10/18',
+                week: '日',
+                title: '10/18（日）｜清水寺＋東山＋祇園',
+                subtitle: 'Sanco Inn 出發 ➔ 清水寺 ➔ 湯豆腐 ➔ 二三年坂 ➔ 祇園',
                 badge: '京都 Day 2',
                 events: [
-                    { time: '10:00~11:30', type: 'spot', icon: '🏯', title: '清水寺', note: '世界遺產，遠眺京都美景', nav: 'Kiyomizu-dera', lat: 34.9949, lng: 135.7850 },
-                    { time: '11:30~12:45', type: 'food', icon: '🍲', title: '清水順正 おかべ家', note: '正宗湯豆腐與京料理', nav: 'Kiyomizu Junsei Okabeya', lat: 34.9954, lng: 135.7838 },
-                    { time: '15:00~15:40', type: 'spot', icon: '⛩️', title: '八坂神社', note: '祇園核心神社', nav: 'Yasaka Shrine', lat: 35.0037, lng: 135.7786 }
+                    { time: '09:30', type: 'hotel', icon: '🏨', title: 'Sanco Inn 出發', note: '—', nav: 'Sanco Inn Kyoto Hachijoguchi', lat: 34.9835, lng: 135.7575 },
+                    { time: '10:00~11:30', type: 'spot', icon: '🏯', title: '清水寺', note: '約 1.5 小時', nav: 'Kiyomizu-dera', lat: 34.9949, lng: 135.7850 },
+                    { 
+                        time: '11:30~12:45', 
+                        type: 'food', 
+                        icon: '🍲', 
+                        title: '清水順正 おかべ家', 
+                        note: '✅ 正式午餐 (湯豆腐/京料理，Tabelog 3.41)', 
+                        nav: 'Kiyomizu Junsei Okabeya',
+                        lat: 34.9954,
+                        lng: 135.7838
+                    },
+                    { time: '12:45~14:15', type: 'spot', icon: '🏘️', title: '二年坂／三年坂', note: '散步、逛街', nav: 'Ninenzaka', lat: 34.9972, lng: 135.7820 },
+                    { time: '14:15~15:00', type: 'food', icon: '🍵', title: 'かさぎ屋 Kasagiya', note: '下午茶 (和菓子/甘味處，Tabelog 3.62)', nav: 'Kasagiya Kyoto', lat: 34.9975, lng: 135.7818 },
+                    { time: '15:00~15:40', type: 'spot', icon: '⛩️', title: '八坂神社', note: '約 40 分鐘', nav: 'Yasaka Shrine', lat: 35.0037, lng: 135.7786 },
+                    { time: '15:40~16:40', type: 'spot', icon: '👘', title: '花見小路／祇園', note: '約 1 小時', nav: 'Gion', lat: 35.0035, lng: 135.7750 },
+                    { 
+                        time: '約18:00', 
+                        type: 'food', 
+                        icon: '🥩', 
+                        title: '晚餐二選一', 
+                        note: '1. モリタ屋 JR京都伊勢丹店 (壽喜燒)\n2. 京都力山 祇園店 (和牛燒肉)', 
+                        nav: 'JR Kyoto Isetan',
+                        lat: 34.9858,
+                        lng: 135.7588
+                    },
+                    { time: '晚餐前後', type: 'shopping', icon: '🛍️', title: '京都高島屋', note: '約 1.5 小時', nav: 'Kyoto Takashimaya', lat: 35.0030, lng: 135.7680 },
+                    { time: '晚餐前後', type: 'shopping', icon: '🎁', title: '滿月 JR京都伊勢丹店 ＆ 仙太郎', note: '阿闍梨餅 ＆ 彈性採買', nav: 'JR Kyoto Isetan', lat: 34.9858, lng: 135.7588 }
                 ]
             },
             {
-                date: '12/19',
-                week: '六',
-                title: '12/19（六）｜宇治＋伏見稻荷 → 大阪',
-                subtitle: '平等院 ➔ 宇治抹茶體驗 ➔ 伏見稻荷 ➔ 移動至大阪',
+                date: '10/19',
+                week: '一',
+                title: '10/19（一）｜宇治＋伏見稻荷＋取行李 → 大阪',
+                subtitle: '三星園 ➔ 平等院 ➔ 午餐 ➔ 宇治上神社 ➔ 通圓本店 ➔ 伏見稻荷 ➔ 回京都取行李 ➔ OMO7 大阪',
                 badge: '轉移大阪',
                 events: [
-                    { time: '09:30~10:15', type: 'food', icon: '🍵', title: '三星園 上林三入本店', note: '正宗宇治抹茶體驗', nav: 'Mitsuboshi-en Kambayashi Sannyu', lat: 34.8903, lng: 135.8105 },
-                    { time: '10:25~11:25', type: 'spot', icon: '🏯', title: '平等院', note: '參訪鳳凰堂', nav: 'Byodoin', lat: 34.8890, lng: 135.8078 },
-                    { time: '15:10~16:25', type: 'spot', icon: '⛩️', title: '伏見稻荷大社', note: '千本鳥居壯觀景致', nav: 'Fushimi Inari Taisha', lat: 34.9671, lng: 135.7727 }
+                    { time: '08:20', type: 'hotel', icon: '🏨', title: 'Sanco Inn 退房', note: '⭐ 行李寄放飯店，晚上回來取', nav: 'Sanco Inn Kyoto Hachijoguchi', lat: 34.9835, lng: 135.7575 },
+                    { time: '08:30~09:00', type: 'hotel', icon: '🚆', title: '京都站 → JR宇治站', note: 'JR奈良線', nav: 'Uji Station', lat: 34.8903, lng: 135.8105 },
+                    { time: '09:00~09:20', type: 'spot', icon: '🚶', title: 'JR宇治站 → 三星園', note: '提早報到', nav: 'Mitsuboshi-en Kambayashi Sannyu', lat: 34.8903, lng: 135.8105 },
+                    { time: '09:30~10:15', type: 'food', icon: '🍵', title: '三星園 上林三入本店｜抹茶體驗', note: '⭐ 建議預約09:30 (Tabelog 3.51)', nav: 'Mitsuboshi-en Kambayashi Sannyu', lat: 34.8903, lng: 135.8105 },
+                    { time: '10:15~10:25', type: 'spot', icon: '🚶', title: '三星園 → 平等院', note: '平等院表參道，順路', nav: 'Byodoin', lat: 34.8890, lng: 135.8078 },
+                    { time: '10:25~11:25', type: 'spot', icon: '🏯', title: '平等院', note: '約 1 小時', nav: 'Byodoin', lat: 34.8890, lng: 135.8078 },
+                    { 
+                        time: '11:30~12:30', 
+                        type: 'food', 
+                        icon: '🍱', 
+                        title: '宇治午餐二選一', 
+                        note: '1. 櫟（くぬぎ） (茶蕎麥)\n2. 京料理 宇治川', 
+                        nav: 'Uji Station',
+                        lat: 34.8903,
+                        lng: 135.8105
+                    },
+                    { time: '12:30~13:00', type: 'spot', icon: '🌿', title: '宇治川／宇治橋', note: '飯後散步', nav: 'Uji Bridge', lat: 34.8915, lng: 135.8115 },
+                    { time: '13:00~13:40', type: 'spot', icon: '⛩️', title: '宇治上神社', note: '約 40 分鐘', nav: 'Ujigami Shrine', lat: 34.8943, lng: 135.8142 },
+                    { time: '13:40~14:10', type: 'food', icon: '🍵', title: '通圓本店', note: '茶點 (Tabelog 3.48)', nav: 'Tsuen Tea', lat: 34.8912, lng: 135.8112 },
+                    { time: '14:10~14:30', type: 'food', icon: '🍵', title: '堀井七茗園', note: '🟡 時間不足優先刪除', nav: 'Horii Shichimeen', lat: 34.8905, lng: 135.8100 },
+                    { time: '14:30~15:10', type: 'hotel', icon: '🚆', title: '宇治 → 伏見稻荷', note: '含步行／候車緩衝', nav: 'Fushimi-Inari Station', lat: 34.9671, lng: 135.7727 },
+                    { time: '15:10~16:25', type: 'spot', icon: '⛩️', title: '伏見稻荷大社', note: '約 1 小時 15 分', nav: 'Fushimi Inari Taisha', lat: 34.9671, lng: 135.7727 },
+                    { time: '16:25~16:45', type: 'hotel', icon: '🚆', title: 'JR稻荷站 → 京都站', note: '返回京都', nav: 'Kyoto Station', lat: 34.9858, lng: 135.7588 },
+                    { time: '17:00~17:15', type: 'hotel', icon: '🧳', title: 'Sanco Inn 取寄放行李', note: '⭐ 必要行程', nav: 'Sanco Inn Kyoto Hachijoguchi', lat: 34.9835, lng: 135.7575 },
+                    { time: '約17:30~18:30', type: 'hotel', icon: '🚆', title: '京都 → 大阪', note: '前往住宿', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '約18:30~19:00', type: 'hotel', icon: '🏨', title: 'OMO7 大阪 Check-in', note: '大阪第1晚', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '19:00後', type: 'food', icon: '🍽️', title: '大阪晚餐／自由活動', note: '自由探索', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 }
                 ]
             },
             {
-                date: '12/20',
-                week: '日',
-                title: '12/20（日）｜日本環球影城 USJ',
-                subtitle: '全日暢玩環球影城',
+                date: '10/20',
+                week: '二',
+                title: '10/20（二）｜日本環球影城 USJ',
+                subtitle: 'OMO7 大阪出發 ➔ 全日 USJ 暢玩',
                 badge: 'USJ 環球',
                 events: [
-                    { time: '早上～晚上', type: 'spot', icon: '🌎', title: 'Universal Studios Japan', note: '任天堂世界與哈利波特園區', nav: 'Universal Studios Japan', lat: 34.6654, lng: 135.4323 }
+                    { time: '約07:00', type: 'hotel', icon: '🏨', title: 'OMO7 大阪出發', note: '依當日開園時間', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '早上～晚上', type: 'spot', icon: '🌎', title: 'Universal Studios Japan', note: '🎫 全天暢玩任天堂與哈利波特', nav: 'Universal Studios Japan', lat: 34.6654, lng: 135.4323 },
+                    { time: '中午', type: 'food', icon: '🍽️', title: '園區內彈性用餐', note: '園區餐廳', nav: 'Universal Studios Japan', lat: 34.6654, lng: 135.4323 },
+                    { time: '晚上', type: 'hotel', icon: '🏨', title: '返回 OMO7 大阪', note: '好好休息', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 }
                 ]
             },
             {
-                date: '12/21',
-                week: '一',
-                title: '12/21（一）｜梅田購物＋通天閣',
-                subtitle: '通天閣 ➔ 梅田午餐 ➔ Alpen & YONEX ➔ 晚餐',
+                date: '10/21',
+                week: '三',
+                title: '10/21（三）｜通天閣＋新世界＋梅田＋Alpen＋YONEX＋康四郎',
+                subtitle: '新世界 ➔ 梅田午餐 ➔ Alpen & YONEX ➔ 康四郎晚餐 ➔ 難波 PARKS',
                 badge: '大阪購物',
                 events: [
-                    { time: '09:40~10:30', type: 'spot', icon: '🗼', title: '通天閣', note: '大阪新世界地標', nav: 'Tsutenkaku', lat: 34.6525, lng: 135.5063 },
-                    { time: '13:00~15:15', type: 'shopping', icon: '🏃', title: 'Alpen OSAKA', note: '大型運動用品旗艦店', nav: 'Alpen OSAKA', lat: 34.7024, lng: 135.4959 }
+                    { time: '09:30', type: 'hotel', icon: '🏨', title: 'OMO7 大阪出發', note: '—', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '09:40~10:30', type: 'spot', icon: '🗼', title: '通天閣', note: '約 50 分鐘', nav: 'Tsutenkaku', lat: 34.6525, lng: 135.5063 },
+                    { time: '10:30~11:10', type: 'spot', icon: '🏮', title: '新世界商店街', note: '約 40 分鐘', nav: 'Shinsekai', lat: 34.6530, lng: 135.5050 },
+                    { time: '11:10~11:45', type: 'hotel', icon: '🚆', title: '新世界 → 梅田', note: '前往 Grand Front Osaka', nav: 'Grand Front Osaka', lat: 34.7024, lng: 135.4959 },
+                    { 
+                        time: '11:45~13:00', 
+                        type: 'food', 
+                        icon: '🍜', 
+                        title: 'にし家 Grand Front大阪店 ⭐ 主要午餐', 
+                        note: '大阪烏龍／烏龍壽喜鍋 (Tabelog 3.52)', 
+                        nav: 'Grand Front Osaka',
+                        lat: 34.7024,
+                        lng: 135.4959
+                    },
+                    { time: '13:00~15:15', type: 'shopping', icon: '🏃', title: 'Alpen OSAKA', note: '大型運動用品購物', nav: 'Alpen OSAKA', lat: 34.7024, lng: 135.4959 },
+                    { time: '15:15~16:00', type: 'shopping', icon: '🏸', title: 'YONEX OSAKA SHOWROOM', note: 'Grand Front 南館B1', nav: 'Grand Front Osaka South Building', lat: 34.7020, lng: 135.4955 },
+                    { time: '16:00~17:30', type: 'shopping', icon: '🛍️', title: '梅田彈性逛街／前往南船場', note: '交通與休息', nav: 'Umeda', lat: 34.7024, lng: 135.4959 },
+                    { 
+                        time: '18:30~20:00', 
+                        type: 'food', 
+                        icon: '🐷', 
+                        title: 'とんかつ 康四郎 ✅ 正式晚餐', 
+                        note: '高級炸豬排 (Tabelog 3.73)', 
+                        nav: 'Tonkatsu Koshiro',
+                        lat: 34.6732,
+                        lng: 135.5012
+                    },
+                    { time: '晚餐後', type: 'spot', icon: '🌿', title: '難波 PARKS', note: '夜晚散步', nav: 'Namba Parks', lat: 34.6620, lng: 135.5020 },
+                    { time: '約21:00', type: 'misc', icon: '☁️', title: '難波雲海', note: '🟡 備選', nav: 'Namba Parks', lat: 34.6620, lng: 135.5020 },
+                    { time: '晚上', type: 'hotel', icon: '🏨', title: '返回 OMO7 大阪', note: '—', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 }
                 ]
             },
             {
-                date: '12/22',
-                week: '二',
-                title: '12/22（二）｜海遊館＋心齋橋道頓堀',
-                subtitle: '大阪海遊館 ➔ 天保山 ➔ 道頓堀 ➔ 心齋橋',
+                date: '10/22',
+                week: '四',
+                title: '10/22（四）｜海遊館＋天保山＋難波＋道頓堀＋心齋橋',
+                subtitle: '海遊館 ➔ 天保山 ➔ 千房午餐 ➔ 道頓堀/心齋橋 ➔ 丸花晚餐',
                 badge: '大阪經典',
                 events: [
-                    { time: '10:15~12:30', type: 'spot', icon: '🐋', title: '大阪海遊館', note: '世界級超大型水族館', nav: 'Osaka Aquarium Kaiyukan', lat: 34.6545, lng: 135.4290 },
-                    { time: '15:00~18:30', type: 'shopping', icon: '🛍️', title: '道頓堀 & 心齋橋', note: '固力果跑跑人與血拼購物', nav: 'Dotonbori', lat: 34.6688, lng: 135.5015 }
+                    { time: '09:30', type: 'hotel', icon: '🏨', title: 'OMO7 大阪出發', note: '—', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '10:15~12:30', type: 'spot', icon: '🐋', title: '大阪海遊館', note: '約 2 小時 15 分', nav: 'Osaka Aquarium Kaiyukan', lat: 34.6545, lng: 135.4290 },
+                    { time: '12:30~13:15', type: 'spot', icon: '🎡', title: '天保山／大摩天輪', note: '約 45 分鐘', nav: 'Tempozan Ferris Wheel', lat: 34.6550, lng: 135.4310 },
+                    { time: '13:15~14:00', type: 'hotel', icon: '🚆', title: '天保山 → 難波', note: '地鐵移動', nav: 'Namba', lat: 34.6656, lng: 135.5022 },
+                    { 
+                        time: '14:00~15:00', 
+                        type: 'food', 
+                        icon: '🥞', 
+                        title: '千房 CHIBO ⭐ 主要午餐', 
+                        note: '大阪燒／鐵板燒 (Tabelog 3.21)', 
+                        nav: 'Chibo Dotonbori',
+                        lat: 34.6680,
+                        lng: 135.5020
+                    },
+                    { time: '15:00~16:30', type: 'spot', icon: '📍', title: '道頓堀', note: '固力果／戎橋／法善寺橫丁', nav: 'Dotonbori', lat: 34.6688, lng: 135.5015 },
+                    { time: '16:30~18:30', type: 'shopping', icon: '🛍️', title: '心齋橋', note: '心齋橋筋／大丸／PARCO／美國村', nav: 'Shinsaibashi-suji Shopping Street', lat: 34.6720, lng: 135.5005 },
+                    { 
+                        time: '19:00~21:00', 
+                        type: 'food', 
+                        icon: '🦀', 
+                        title: '丸花 心齋橋 ✅ 正式晚餐', 
+                        note: '螃蟹料理／涮涮鍋 (Tabelog 3.21)', 
+                        nav: 'Maruhana Shinsaibashi',
+                        lat: 34.6710,
+                        lng: 135.5020
+                    },
+                    { time: '晚上', type: 'hotel', icon: '🏨', title: '返回 OMO7 大阪', note: '—', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 }
                 ]
             },
             {
-                date: '12/23',
-                week: '三',
-                title: '12/23（三）｜神戶動物王國＋神戶牛',
-                subtitle: '神戶動物王國 ➔ 元町商店街 ➔ 神戶牛排晚餐',
+                date: '10/23',
+                week: '五',
+                title: '10/23（五）｜神戶動物王國＋元町＋神戶牛 → 大阪',
+                subtitle: '早起出發 ➔ 神戶動物王國 ➔ 元町商店街 ➔ Steakland 神戶牛 ➔ 返回大阪',
                 badge: '神戶一日',
                 events: [
-                    { time: '10:00~14:45', type: 'spot', icon: '🐾', title: '神戶動物王國', note: '近距離接觸水豚君與精彩飛鳥秀', nav: 'Kobe Animal Kingdom', lat: 34.6621, lng: 135.2215 },
-                    { time: '17:00~18:30', type: 'food', icon: '🥩', title: '神戶牛排 Steakland', note: '頂級鐵板神戶牛', nav: 'Steakland Kobe', lat: 34.6938, lng: 135.1920 }
+                    { time: '07:30~08:00', type: 'hotel', icon: '🏨', title: 'OMO7 大阪出發', note: '早起出發', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '約09:00', type: 'hotel', icon: '🚆', title: '抵達三宮', note: '轉 Port Liner', nav: 'Sannomiya Station', lat: 34.6940, lng: 135.1950 },
+                    { time: '10:00', type: 'spot', icon: '🐾', title: '神戶動物王國入園', note: '核心行程', nav: 'Kobe Animal Kingdom', lat: 34.6621, lng: 135.2215 },
+                    { time: '10:00~14:45', type: 'spot', icon: '🐾', title: '動物王國＋表演／互動', note: '🦅 Wings飛鳥秀 ｜ 🐕 Buddy ｜ 🐧 企鵝餵食', nav: 'Kobe Animal Kingdom', lat: 34.6621, lng: 135.2215 },
+                    { time: '14:45~15:30', type: 'hotel', icon: '🚆', title: '前往三宮／元町', note: '—', nav: 'Motomachi Station', lat: 34.6888, lng: 135.1865 },
+                    { time: '15:30~16:30', type: 'shopping', icon: '🛍️', title: '元町商店街', note: '約 1 小時', nav: 'Motomachi Shopping Street', lat: 34.6888, lng: 135.1865 },
+                    { time: '16:30~17:00', type: 'hotel', icon: '🚶', title: '返回三宮', note: '—', nav: 'Sannomiya Station', lat: 34.6940, lng: 135.1950 },
+                    { 
+                        time: '17:00~18:30', 
+                        type: 'food', 
+                        icon: '🥩', 
+                        title: '神戶牛排 Steakland ⭐ 主要晚餐', 
+                        note: '神戶牛鐵板燒 (Tabelog 3.48)', 
+                        nav: 'Steakland Kobe',
+                        lat: 34.6938,
+                        lng: 135.1920
+                    },
+                    { time: '約19:00~20:00', type: 'hotel', icon: '🚆', title: '三宮 → 大阪', note: '提早返回', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '20:00後', type: 'misc', icon: '☁️', title: '難波雲海', note: '🟡 彈性行程', nav: 'Namba Parks', lat: 34.6620, lng: 135.5020 },
+                    { time: '晚上', type: 'hotel', icon: '🏨', title: '返回 OMO7 大阪', note: '最後一晚', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 }
                 ]
             },
             {
-                date: '12/24',
-                week: '四',
-                title: '12/24（四）｜大阪 → 關西機場 → 桃園',
-                subtitle: '關西機場 ➔ 搭機返台',
+                date: '10/24',
+                week: '六',
+                title: '10/24（六）｜大阪 → 關西機場 → 桃園',
+                subtitle: 'OMO7 退房 ➔ 關西機場 ➔ 搭機返台 (兩人各25kg)',
                 badge: '回程賦歸',
                 events: [
+                    { time: '07:30~08:00', type: 'hotel', icon: '🏨', title: 'OMO7 大阪退房', note: '整理行李', nav: 'OMO7 Osaka', lat: 34.6495, lng: 135.5032 },
+                    { time: '約08:00', type: 'hotel', icon: '🚆', title: '前往關西機場', note: '搭乘南海電鐵或HARUKA', nav: 'Kansai International Airport', lat: 34.4342, lng: 135.2447 },
+                    { time: '約09:20', type: 'hotel', icon: '🛫', title: '抵達關西機場 T1', note: '預留約 3 小時', nav: 'Kansai Airport Terminal 1', lat: 34.4342, lng: 135.2447 },
                     { time: '12:20', type: 'hotel', icon: '✈', title: '台灣虎航 IT711 關西 → 桃園', note: '14:15 抵達桃園 T1', nav: 'Kansai Airport Terminal 1', lat: 34.4342, lng: 135.2447 }
                 ]
             }
         ];
 
-        // 待辦只存在此裝置，不會被雲端空清單覆蓋。
         const TODO_LOCAL_KEY = 'kansai_master_todos_local_v20261013';
         const DEFAULT_TODOS = [
             { id: 1, title: '🎨 TeamLab Biovortex Kyoto 購票', desc: '10/17 17:30 場次。', completed: false, customTime: '10/17 17:30' },
@@ -673,7 +810,32 @@
         }
         let todoList = loadLocalTodos();
 
-        let customDayNotes = JSON.parse(localStorage.getItem('kansai_master_custom_notes')) || {};
+        const NOTE_STORAGE_KEY = 'kansai_master_custom_notes';
+        const NOTE_QUEUE_KEY = 'kansai_master_note_pending_v2';
+        function safeLoadJSON(key, fallback) {
+            try { const v = JSON.parse(localStorage.getItem(key)); return v && typeof v === 'object' ? v : fallback; }
+            catch (_) { return fallback; }
+        }
+        let customDayNotes = safeLoadJSON(NOTE_STORAGE_KEY, {});
+        let pendingNoteActions = safeLoadJSON(NOTE_QUEUE_KEY, {});
+        function saveCustomNotes() {
+            localStorage.setItem(NOTE_STORAGE_KEY, JSON.stringify(customDayNotes));
+        }
+        function queueNoteAction(action) {
+            pendingNoteActions[String(action.id)] = action;
+            localStorage.setItem(NOTE_QUEUE_KEY, JSON.stringify(pendingNoteActions));
+        }
+        function ensureNoteIds() {
+            let changed = false;
+            Object.keys(customDayNotes).forEach(dayKey => {
+                if (!Array.isArray(customDayNotes[dayKey])) { customDayNotes[dayKey] = []; changed = true; return; }
+                customDayNotes[dayKey].forEach(note => {
+                    if (!note.id) { note.id = 'LEGACY_' + Date.now() + '_' + Math.random().toString(36).slice(2, 12); changed = true; }
+                });
+            });
+            if (changed) saveCustomNotes();
+        }
+        ensureNoteIds();
         let expensesList = [];
         let jpyExchangeRate = 0.215;
         let selectedPaymentFilter = 'all';
@@ -925,8 +1087,9 @@
             if (!customDayNotes[dayKey]) customDayNotes[dayKey] = [];
             const noteId = `NOTE_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
             customDayNotes[dayKey].push({ id: noteId, time, title, desc });
-            localStorage.setItem('kansai_master_custom_notes', JSON.stringify(customDayNotes));
-            postSharedAction({type:'note', action:'upsert', id: noteId, dayKey, time, title, desc});
+            saveCustomNotes();
+            queueNoteAction({type:'note', action:'upsert', id: noteId, dayKey, time, title, desc});
+            syncSharedData();
 
             document.getElementById('custom-note-time').value = '';
             document.getElementById('custom-note-title').value = '';
@@ -937,8 +1100,9 @@
         function deleteCustomDayNote(dayKey, index) {
             if (customDayNotes[dayKey]) {
                 const removed = customDayNotes[dayKey].splice(index, 1)[0];
-                if (removed) postSharedAction({type:'note', action:'delete', id: removed.id || '', dayKey, time:removed.time, title:removed.title, desc:removed.desc});
-                localStorage.setItem('kansai_master_custom_notes', JSON.stringify(customDayNotes));
+                if (removed) queueNoteAction({type:'note', action:'delete', id: removed.id, dayKey});
+                saveCustomNotes();
+                syncSharedData();
                 renderCustomDayNotes();
             }
         }
@@ -1026,43 +1190,72 @@
             }
         }
 
-        // Shared itinerary sync only; todo checklist stays local.
+        // 雲端只同步每日自訂行程；待辦永遠保留本機。
+        // 採用 local-first：不論網路狀態，重新整理都不會失去已輸入內容。
         let sharedSyncBusy = false;
-        let sharedMutationInFlight = 0;
+        function getRemoteNoteIds(notes) {
+            const ids = new Set();
+            Object.keys(notes || {}).forEach(day => {
+                (Array.isArray(notes[day]) ? notes[day] : []).forEach(n => { if (n.id) ids.add(String(n.id)); });
+            });
+            return ids;
+        }
         async function syncSharedData() {
-            if (sharedSyncBusy || sharedMutationInFlight) return;
+            if (sharedSyncBusy) return;
             sharedSyncBusy = true;
             try {
                 const response = await fetch(GAS_WEB_APP_URL + '?resource=shared&t=' + Date.now(), {cache:'no-store'});
+                if (!response.ok) throw Error('讀取雲端失敗');
                 const result = await response.json();
-                if (result.status !== 'success') throw new Error(result.message || 'Sync failed');
-                if (sharedMutationInFlight) return;
-                // 不用空白雲端資料覆蓋既有本機行程備註。
-                const hasRemoteNotes = result.notes && Object.values(result.notes).some(v => Array.isArray(v) && v.length);
-                const hasLocalNotes = Object.values(customDayNotes).some(v => Array.isArray(v) && v.length);
-                if (hasRemoteNotes || !hasLocalNotes) customDayNotes = result.notes || {};
-                localStorage.setItem('kansai_master_custom_notes', JSON.stringify(customDayNotes));
-                renderCustomDayNotes();
-            } catch (err) {
-                console.warn('行程與待辦同步暫時失敗', err);
-            } finally { sharedSyncBusy = false; }
-        }
-        async function postSharedAction(payload) {
-            sharedMutationInFlight++;
-            try {
-                const response = await fetch(GAS_WEB_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({resource:'shared', ...payload})
+                if (result.status !== 'success' || !result.notes || typeof result.notes !== 'object') throw Error('雲端格式錯誤');
+                const remote = result.notes;
+                const remoteIds = getRemoteNoteIds(remote);
+                // 確認前次寫入是否真的出現在 Google Sheets；沒確認前不能移除待同步紀錄。
+                Object.keys(pendingNoteActions).forEach(id => {
+                    const act = pendingNoteActions[id];
+                    if ((act.action === 'upsert' && remoteIds.has(id)) || (act.action === 'delete' && !remoteIds.has(id))) {
+                        delete pendingNoteActions[id];
+                    }
                 });
-                const result = await response.json();
-                if (result.status !== 'success') throw new Error(result.message || 'Save failed');
+                localStorage.setItem(NOTE_QUEUE_KEY, JSON.stringify(pendingNoteActions));
+                const merged = {};
+                Object.keys(remote).forEach(day => {
+                    if (Array.isArray(remote[day])) merged[day] = remote[day].map(n => ({...n, id:String(n.id || '')}));
+                });
+                // 先前僅存在本機的資料，不會被空白雲端覆蓋。
+                Object.keys(customDayNotes).forEach(day => {
+                    if (!merged[day]) merged[day] = [];
+                    customDayNotes[day].forEach(n => {
+                        if (!n.id) return;
+                        if (pendingNoteActions[String(n.id)]?.action === 'delete') return;
+                        if (!merged[day].some(x => String(x.id) === String(n.id))) merged[day].push(n);
+                    });
+                });
+                // 本機正在編輯的版本優先，避免輪詢把新內容覆蓋。
+                Object.keys(pendingNoteActions).forEach(id => {
+                    const act = pendingNoteActions[id];
+                    Object.keys(merged).forEach(day => { merged[day] = merged[day].filter(n => String(n.id) !== id); });
+                    if (act.action === 'upsert') {
+                        if (!merged[act.dayKey]) merged[act.dayKey] = [];
+                        merged[act.dayKey].push({id:act.id, time:act.time, title:act.title, desc:act.desc});
+                    }
+                });
+                customDayNotes = merged;
+                saveCustomNotes();
+                renderCustomDayNotes();
+                // 將未上雲端的本機舊備註排隊，避免更換版本時資料遺失。
+                Object.keys(customDayNotes).forEach(day => customDayNotes[day].forEach(n => {
+                    if (!remoteIds.has(String(n.id)) && !pendingNoteActions[String(n.id)])
+                        queueNoteAction({type:'note', action:'upsert', id:n.id, dayKey:day, time:n.time, title:n.title, desc:n.desc});
+                }));
+                // 一次寫一筆，保留佇列直到下次讀取驗證。
+                const next = Object.values(pendingNoteActions)[0];
+                if (next) {
+                    await fetch(GAS_WEB_APP_URL, {method:'POST', mode:'no-cors', body:JSON.stringify({resource:'shared', ...next})});
+                }
             } catch (err) {
-                console.error('雲端儲存失敗', err);
-                alert('行程或待辦未成功同步到雲端，請檢查網路後重試。');
-            } finally {
-                sharedMutationInFlight--;
-                if (!sharedMutationInFlight) syncSharedData();
-            }
+                console.warn('行程備註尚未同步；本機內容已保留', err);
+            } finally { sharedSyncBusy = false; }
         }
 
         function handlePaymentMethodChange() {
