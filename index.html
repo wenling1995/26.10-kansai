@@ -136,7 +136,7 @@
                     <span class="font-bold text-xs text-wabi-text flex items-center gap-1.5 whitespace-nowrap">
                         <i class="fa-solid fa-note-sticky text-wabi-accent"></i> 當日自訂行程與備註欄
                     </span>
-                    <span class="text-[10px] text-wabi-muted font-normal">自動儲存於此日期</span>
+                    <button type="button" onclick="syncSharedData()" id="note-cloud-status" class="text-[10px] text-wabi-accent font-normal underline">本機已保存・檢查雲端中</button>
                 </div>
                 
                 <div id="day-custom-notes-list" class="space-y-2"></div>
@@ -1190,71 +1190,94 @@
             }
         }
 
-        // 雲端只同步每日自訂行程；待辦永遠保留本機。
-        // 採用 local-first：不論網路狀態，重新整理都不會失去已輸入內容。
+        // 自訂行程：本機先保存，雲端逐筆同步，讀回驗證後才清除佇列。
+        // 待辦事項刻意不參與此同步。
         let sharedSyncBusy = false;
-        function getRemoteNoteIds(notes) {
+        function noteStatus(message, failed) {
+            const el = document.getElementById('note-cloud-status');
+            if (el) { el.textContent = message; el.style.color = failed ? '#B46A55' : '#6B7A70'; }
+        }
+        function noteIds(notes) {
             const ids = new Set();
-            Object.keys(notes || {}).forEach(day => {
-                (Array.isArray(notes[day]) ? notes[day] : []).forEach(n => { if (n.id) ids.add(String(n.id)); });
-            });
+            Object.keys(notes || {}).forEach(day => (Array.isArray(notes[day]) ? notes[day] : []).forEach(n => {
+                if (n.id) ids.add(String(n.id));
+            }));
             return ids;
+        }
+        async function fetchCloudNotes() {
+            const response = await fetch(GAS_WEB_APP_URL + '?resource=shared&t=' + Date.now(), {cache:'no-store',redirect:'follow'});
+            if (!response.ok) throw Error('HTTP ' + response.status);
+            const data = await response.json();
+            if (data.status !== 'success' || !data.notes || typeof data.notes !== 'object')
+                throw Error(data.message || 'Google Apps Script 尚未啟用 shared API');
+            return data.notes;
+        }
+        async function sendNoteAction(action) {
+            // Apps Script Web App 跨網域 POST 需避免預檢請求。
+            // no-cors 無法讀取回覆，必須在下一次 GET 確認寫入。
+            await fetch(GAS_WEB_APP_URL, {
+                method:'POST', mode:'no-cors', redirect:'follow',
+                headers:{'Content-Type':'text/plain;charset=utf-8'},
+                body:JSON.stringify(Object.assign({resource:'shared'}, action))
+            });
         }
         async function syncSharedData() {
             if (sharedSyncBusy) return;
             sharedSyncBusy = true;
+            noteStatus('正在同步行程備註…', false);
             try {
-                const response = await fetch(GAS_WEB_APP_URL + '?resource=shared&t=' + Date.now(), {cache:'no-store'});
-                if (!response.ok) throw Error('讀取雲端失敗');
-                const result = await response.json();
-                if (result.status !== 'success' || !result.notes || typeof result.notes !== 'object') throw Error('雲端格式錯誤');
-                const remote = result.notes;
-                const remoteIds = getRemoteNoteIds(remote);
-                // 確認前次寫入是否真的出現在 Google Sheets；沒確認前不能移除待同步紀錄。
+                let remote = await fetchCloudNotes();
+                let remoteIds = noteIds(remote);
+                // 先驗證上一輪送出的資料；未確認就繼續保留待傳紀錄。
                 Object.keys(pendingNoteActions).forEach(id => {
-                    const act = pendingNoteActions[id];
-                    if ((act.action === 'upsert' && remoteIds.has(id)) || (act.action === 'delete' && !remoteIds.has(id))) {
-                        delete pendingNoteActions[id];
-                    }
+                    const action = pendingNoteActions[id];
+                    if ((action.action === 'upsert' && remoteIds.has(id)) ||
+                        (action.action === 'delete' && !remoteIds.has(id))) delete pendingNoteActions[id];
                 });
                 localStorage.setItem(NOTE_QUEUE_KEY, JSON.stringify(pendingNoteActions));
+                // 舊版只有本機的備註也應補傳，但不能復活使用者已刪除的資料。
+                Object.keys(customDayNotes).forEach(day => (customDayNotes[day] || []).forEach(n => {
+                    const id = String(n.id || '');
+                    if (id && !remoteIds.has(id) && !pendingNoteActions[id])
+                        queueNoteAction({type:'note',action:'upsert',id:id,dayKey:day,time:n.time,title:n.title,desc:n.desc});
+                }));
+                // 批次逐筆傳送；Google Sheets 端以 ID upsert 避免重複。
+                const actions = Object.values(pendingNoteActions);
+                for (const action of actions) await sendNoteAction(action);
+                if (actions.length) {
+                    // 寫入後讀回，不能把 no-cors 的送出當成寫入成功。
+                    remote = await fetchCloudNotes();
+                    remoteIds = noteIds(remote);
+                    Object.keys(pendingNoteActions).forEach(id => {
+                        const action = pendingNoteActions[id];
+                        if ((action.action === 'upsert' && remoteIds.has(id)) ||
+                            (action.action === 'delete' && !remoteIds.has(id))) delete pendingNoteActions[id];
+                    });
+                    localStorage.setItem(NOTE_QUEUE_KEY, JSON.stringify(pendingNoteActions));
+                }
                 const merged = {};
                 Object.keys(remote).forEach(day => {
-                    if (Array.isArray(remote[day])) merged[day] = remote[day].map(n => ({...n, id:String(n.id || '')}));
+                    merged[day] = Array.isArray(remote[day]) ? remote[day].map(n => ({
+                        id:String(n.id || ''), time:n.time, title:n.title, desc:n.desc
+                    })) : [];
                 });
-                // 先前僅存在本機的資料，不會被空白雲端覆蓋。
-                Object.keys(customDayNotes).forEach(day => {
-                    if (!merged[day]) merged[day] = [];
-                    customDayNotes[day].forEach(n => {
-                        if (!n.id) return;
-                        if (pendingNoteActions[String(n.id)]?.action === 'delete') return;
-                        if (!merged[day].some(x => String(x.id) === String(n.id))) merged[day].push(n);
-                    });
-                });
-                // 本機正在編輯的版本優先，避免輪詢把新內容覆蓋。
+                // 保留本機尚未成功同步的項目；刪除項目不再顯示。
                 Object.keys(pendingNoteActions).forEach(id => {
-                    const act = pendingNoteActions[id];
+                    const action = pendingNoteActions[id];
                     Object.keys(merged).forEach(day => { merged[day] = merged[day].filter(n => String(n.id) !== id); });
-                    if (act.action === 'upsert') {
-                        if (!merged[act.dayKey]) merged[act.dayKey] = [];
-                        merged[act.dayKey].push({id:act.id, time:act.time, title:act.title, desc:act.desc});
+                    if (action.action === 'upsert') {
+                        if (!merged[action.dayKey]) merged[action.dayKey] = [];
+                        merged[action.dayKey].push({id:action.id,time:action.time,title:action.title,desc:action.desc});
                     }
                 });
                 customDayNotes = merged;
                 saveCustomNotes();
                 renderCustomDayNotes();
-                // 將未上雲端的本機舊備註排隊，避免更換版本時資料遺失。
-                Object.keys(customDayNotes).forEach(day => customDayNotes[day].forEach(n => {
-                    if (!remoteIds.has(String(n.id)) && !pendingNoteActions[String(n.id)])
-                        queueNoteAction({type:'note', action:'upsert', id:n.id, dayKey:day, time:n.time, title:n.title, desc:n.desc});
-                }));
-                // 一次寫一筆，保留佇列直到下次讀取驗證。
-                const next = Object.values(pendingNoteActions)[0];
-                if (next) {
-                    await fetch(GAS_WEB_APP_URL, {method:'POST', mode:'no-cors', body:JSON.stringify({resource:'shared', ...next})});
-                }
+                const count = Object.keys(pendingNoteActions).length;
+                noteStatus(count ? '本機已保存・' + count + ' 筆待雲端確認' : '✓ 已同步至雲端', !!count);
             } catch (err) {
-                console.warn('行程備註尚未同步；本機內容已保留', err);
+                console.warn('自訂行程雲端同步失敗；本機備註已保留', err);
+                noteStatus('本機已保存・雲端連線失敗', true);
             } finally { sharedSyncBusy = false; }
         }
 
