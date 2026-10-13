@@ -586,6 +586,8 @@
             setupAIChat();
             handlePaymentMethodChange();
             syncWithGoogleSheets(false);
+            syncSharedData();
+            setInterval(() => { if (!document.hidden) syncSharedData(); }, 10000);
         });
 
         function switchPage(pageId) {
@@ -811,8 +813,10 @@
 
             const dayKey = itineraryData[activeDayIndex].date;
             if (!customDayNotes[dayKey]) customDayNotes[dayKey] = [];
-            customDayNotes[dayKey].push({ time, title, desc });
+            const noteId = `NOTE_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
+            customDayNotes[dayKey].push({ id: noteId, time, title, desc });
             localStorage.setItem('kansai_master_custom_notes', JSON.stringify(customDayNotes));
+            postSharedAction({type:'note', action:'upsert', id: noteId, dayKey, time, title, desc});
 
             document.getElementById('custom-note-time').value = '';
             document.getElementById('custom-note-title').value = '';
@@ -822,7 +826,8 @@
 
         function deleteCustomDayNote(dayKey, index) {
             if (customDayNotes[dayKey]) {
-                customDayNotes[dayKey].splice(index, 1);
+                const removed = customDayNotes[dayKey].splice(index, 1)[0];
+                if (removed) postSharedAction({type:'note', action:'delete', id: removed.id || '', dayKey, time:removed.time, title:removed.title, desc:removed.desc});
                 localStorage.setItem('kansai_master_custom_notes', JSON.stringify(customDayNotes));
                 renderCustomDayNotes();
             }
@@ -857,7 +862,9 @@
             const customTime = document.getElementById('new-todo-time').value.trim();
             if (!title) return;
 
-            todoList.push({ id: Date.now(), title, desc: desc || '自行新增', completed: false, customTime: customTime || '待安排' });
+            const item = { id: Date.now(), title, desc: desc || '自行新增', completed: false, customTime: customTime || '待安排' };
+            todoList.push(item);
+            postSharedAction({type:'todo', action:'upsert', item});
             localStorage.setItem('kansai_master_todos', JSON.stringify(todoList));
             document.getElementById('new-todo-title').value = '';
             document.getElementById('new-todo-desc').value = '';
@@ -869,6 +876,7 @@
             const item = todoList.find(t => t.id === id);
             if (item) {
                 item.completed = !item.completed;
+                postSharedAction({type:'todo', action:'upsert', item});
                 localStorage.setItem('kansai_master_todos', JSON.stringify(todoList));
                 renderTodoList();
             }
@@ -876,8 +884,48 @@
 
         function deleteTodo(id) {
             todoList = todoList.filter(t => t.id !== id);
+            postSharedAction({type:'todo', action:'delete', id});
             localStorage.setItem('kansai_master_todos', JSON.stringify(todoList));
             renderTodoList();
+        }
+
+        // Shared itinerary and todo sync; separate from expense data.
+        let sharedSyncBusy = false;
+        let sharedMutationInFlight = 0;
+        async function syncSharedData() {
+            if (sharedSyncBusy || sharedMutationInFlight) return;
+            sharedSyncBusy = true;
+            try {
+                const response = await fetch(GAS_WEB_APP_URL + '?resource=shared&t=' + Date.now(), {cache:'no-store'});
+                const result = await response.json();
+                if (result.status !== 'success') throw new Error(result.message || 'Sync failed');
+                if (sharedMutationInFlight) return;
+                todoList = result.todos;
+                customDayNotes = result.notes;
+                localStorage.setItem('kansai_master_todos', JSON.stringify(todoList));
+                localStorage.setItem('kansai_master_custom_notes', JSON.stringify(customDayNotes));
+                renderTodoList();
+                renderCustomDayNotes();
+            } catch (err) {
+                console.warn('行程與待辦同步暫時失敗', err);
+            } finally { sharedSyncBusy = false; }
+        }
+        async function postSharedAction(payload) {
+            sharedMutationInFlight++;
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({resource:'shared', ...payload})
+                });
+                const result = await response.json();
+                if (result.status !== 'success') throw new Error(result.message || 'Save failed');
+            } catch (err) {
+                console.error('雲端儲存失敗', err);
+                alert('行程或待辦未成功同步到雲端，請檢查網路後重試。');
+            } finally {
+                sharedMutationInFlight--;
+                if (!sharedMutationInFlight) syncSharedData();
+            }
         }
 
         function handlePaymentMethodChange() {
